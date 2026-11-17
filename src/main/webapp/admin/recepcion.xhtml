@@ -1,0 +1,1087 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+<ui:composition template="/admin/template.xhtml">
+    <ui:define name="title">Recepción - Hotel Taipicala</ui:define>
+    
+    <ui:define name="content">
+        <style>
+        /*<![CDATA[*/
+            .recepcion-container {
+                display: flex;
+                flex-direction: column;
+                gap: 22px;
+            }
+
+            /* ================= HERO BANNER ================= */
+            .recepcion-hero-banner {
+                position: relative;
+                border-radius: 18px;
+                overflow: hidden;
+                padding: 30px 32px;
+                background-image: url('#{request.contextPath}/resources/img/recepcion-banner.jpg');
+                background-size: cover;
+                background-position: center;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .recepcion-hero-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(90deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.72) 55%, rgba(15, 23, 42, 0.45) 100%);
+                z-index: 1;
+            }
+
+            .recepcion-hero-left {
+                position: relative;
+                z-index: 2;
+                color: #ffffff;
+            }
+
+            .recepcion-hero-left h2 {
+                font-size: 28px;
+                font-weight: 800;
+                margin: 0 0 4px 0;
+                letter-spacing: -0.4px;
+            }
+
+            .recepcion-hero-left p {
+                font-size: 13.5px;
+                color: rgba(255, 255, 255, 0.9);
+                margin: 0;
+            }
+
+            .recepcion-hero-right {
+                position: relative;
+                z-index: 2;
+                color: #ffffff;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 4px;
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .recepcion-hero-right i {
+                margin-right: 6px;
+                opacity: 0.9;
+            }
+
+            /* ================= 5 KPI CARDS ================= */
+            .kpi-grid-recepcion {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 16px;
+            }
+
+            .rec-kpi-card {
+                border-radius: 16px;
+                padding: 18px 20px;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 8px 18px -4px rgba(0, 0, 0, 0.08);
+                transition: transform 0.2s ease;
+            }
+
+            .rec-kpi-card:hover {
+                transform: translateY(-2px);
+            }
+
+            .kpi-rec-green { background: #059669; }
+            .kpi-rec-blue { background: #0284c7; }
+            .kpi-rec-orange { background: #f59e0b; }
+            .kpi-rec-purple { background: #7c3aed; }
+            .kpi-rec-red { background: #ef4444; }
+
+            .rec-kpi-left {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .rec-kpi-icon {
+                font-size: 24px;
+            }
+
+            .rec-kpi-text h3 {
+                font-size: 26px;
+                font-weight: 800;
+                margin: 0;
+                line-height: 1.1;
+            }
+
+            .rec-kpi-text p {
+                font-size: 11.5px;
+                margin: 2px 0 0 0;
+                color: rgba(255, 255, 255, 0.9);
+                white-space: nowrap;
+            }
+
+            .rec-kpi-arrow {
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.7);
+            }
+
+            /* ================= SUB-TABS BAR ================= */
+            .recepcion-tabs-card {
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 12px 24px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border: 1px solid #edf2f7;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+                flex-wrap: wrap;
+                gap: 14px;
+            }
+
+            .tabs-list {
+                display: flex;
+                align-items: center;
+                gap: 24px;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .tab-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13.5px;
+                font-weight: 600;
+                color: #64748b;
+                text-decoration: none;
+                padding: 10px 4px;
+                position: relative;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+
+            .tab-link:hover {
+                color: #0284c7;
+            }
+
+            .tab-link.active {
+                color: #0284c7;
+            }
+
+            .tab-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: -12px;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background-color: #0284c7;
+                border-radius: 3px 3px 0 0;
+            }
+
+            .btn-walkin {
+                background-color: #0284c7;
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                padding: 10px 18px;
+                font-size: 13.5px;
+                font-weight: 600;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+                transition: all 0.2s ease;
+            }
+
+            .btn-walkin:hover {
+                background-color: #0369a1;
+                transform: translateY(-1px);
+            }
+
+            /* ================= FILTERS ROW ================= */
+            .filters-white-card {
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 18px 24px;
+                border: 1px solid #edf2f7;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .filter-group label {
+                font-size: 11.5px;
+                font-weight: 600;
+                color: #475569;
+            }
+
+            .filter-control {
+                height: 38px;
+                border: 1px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-family: inherit;
+                color: #1e293b;
+                outline: none;
+                background-color: #ffffff;
+                min-width: 130px;
+            }
+
+            .filter-control:focus {
+                border-color: #0284c7;
+            }
+
+            .filter-search-flex {
+                flex: 1;
+                min-width: 220px;
+            }
+
+            .filter-search-flex input {
+                width: 100%;
+                height: 38px;
+                border: 1px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-family: inherit;
+                outline: none;
+            }
+
+            .filter-search-flex input:focus {
+                border-color: #0284c7;
+            }
+
+            .btn-rec-buscar {
+                height: 38px;
+                background-color: #0284c7;
+                color: #ffffff;
+                border: none;
+                border-radius: 8px;
+                padding: 0 16px;
+                font-size: 13px;
+                font-weight: 600;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+                margin-top: 18px;
+            }
+
+            .btn-rec-buscar:hover {
+                background-color: #0369a1;
+            }
+
+            .btn-rec-limpiar {
+                height: 38px;
+                background-color: #f1f5f9;
+                color: #475569;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0 14px;
+                font-size: 13px;
+                font-weight: 600;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+                margin-top: 18px;
+            }
+
+            .btn-rec-limpiar:hover {
+                background-color: #e2e8f0;
+            }
+
+            /* ================= 2-COLUMN MAIN CONTENT ================= */
+            .recepcion-main-grid {
+                display: grid;
+                grid-template-columns: 1fr 360px;
+                gap: 20px;
+                align-items: start;
+            }
+
+            /* Left Table Panel */
+            .table-panel-card {
+                background: #ffffff;
+                border-radius: 18px;
+                padding: 22px 24px;
+                border: 1px solid #edf2f7;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+            }
+
+            .table-rec {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: 13px;
+            }
+
+            .table-rec th {
+                font-size: 12px;
+                font-weight: 700;
+                color: #0f172a;
+                padding: 10px 12px;
+                border-bottom: 1.5px solid #edf2f7;
+                text-align: left;
+                white-space: nowrap;
+            }
+
+            .table-rec td {
+                padding: 12px;
+                color: #334155;
+                border-bottom: 1px solid #f8fafc;
+                vertical-align: middle;
+            }
+
+            .table-rec tbody tr:hover {
+                background-color: #f8fafc;
+            }
+
+            .table-rec tbody tr.selected-row {
+                background-color: #f0f9ff;
+            }
+
+            /* Status Pill Badges with arrow */
+            .status-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffffff;
+                white-space: nowrap;
+            }
+
+            .status-pill i {
+                font-size: 9px;
+            }
+
+            .pill-limpia { background-color: #10b981; }
+            .pill-limpieza { background-color: #f59e0b; }
+            .pill-pendiente { background-color: #ef4444; }
+            .pill-mantenimiento { background-color: #475569; }
+
+            .rec-actions-cell {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .btn-rec-action {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-action-view {
+                background-color: #f1f5f9;
+                border: 1px solid #e2e8f0;
+                color: #475569;
+            }
+
+            .btn-action-view:hover {
+                background-color: #e2e8f0;
+                color: #0f172a;
+            }
+
+            .btn-action-edit {
+                background-color: #0284c7;
+                border: none;
+                color: #ffffff;
+            }
+
+            .btn-action-edit:hover {
+                background-color: #0369a1;
+            }
+
+            .btn-action-tasks {
+                background-color: #f8fafc;
+                border: 1px solid #cbd5e1;
+                color: #334155;
+            }
+
+            .btn-action-tasks:hover {
+                background-color: #e2e8f0;
+            }
+
+            /* Table Pagination */
+            .table-pagination-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 20px;
+                padding-top: 16px;
+                border-top: 1px solid #edf2f7;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .pagination-info {
+                font-size: 12.5px;
+                color: #64748b;
+            }
+
+            .pagination-btn-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .p-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                font-weight: 500;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                background-color: #ffffff;
+                color: #475569;
+                cursor: pointer;
+            }
+
+            .p-btn.active {
+                background-color: #0284c7;
+                color: #ffffff;
+                border-color: #0284c7;
+                font-weight: 700;
+            }
+
+            /* Right Details Panel ("Detalle de Habitación") */
+            .detail-panel-card {
+                background: #ffffff;
+                border-radius: 18px;
+                padding: 22px;
+                border: 1px solid #edf2f7;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .detail-header-title {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 15px;
+                font-weight: 700;
+                color: #1e293b;
+            }
+
+            .detail-thumbnail-img {
+                width: 100%;
+                height: 140px;
+                object-fit: cover;
+                border-radius: 12px;
+                display: block;
+            }
+
+            .detail-room-title-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .detail-room-title-row h4 {
+                font-size: 17px;
+                font-weight: 800;
+                color: #0f172a;
+                margin: 0;
+            }
+
+            .detail-info-list {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                font-size: 12.5px;
+                color: #475569;
+            }
+
+            .detail-info-item {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .detail-info-item i {
+                width: 16px;
+                color: #64748b;
+                text-align: center;
+            }
+
+            .detail-checklist-section {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding-top: 8px;
+                border-top: 1px solid #f1f5f9;
+            }
+
+            .detail-checklist-section h5 {
+                font-size: 13px;
+                font-weight: 700;
+                color: #1e293b;
+                margin: 0 0 4px 0;
+            }
+
+            .check-task-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12.5px;
+                color: #334155;
+                cursor: pointer;
+            }
+
+            .check-task-item input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                accent-color: #0284c7;
+                cursor: pointer;
+            }
+
+            .btn-mark-clean {
+                width: 100%;
+                height: 44px;
+                background-color: #10b981;
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                font-size: 14px;
+                font-weight: 700;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                cursor: pointer;
+                box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+                transition: all 0.2s ease;
+                margin-top: 8px;
+            }
+
+            .btn-mark-clean:hover {
+                background-color: #059669;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+            }
+
+            /* Modal Walk-in */
+            .modal-walkin-backdrop {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(15, 23, 42, 0.6);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .modal-walkin-card {
+                background: #ffffff;
+                border-radius: 20px;
+                max-width: 500px;
+                width: 100%;
+                padding: 28px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            }
+
+            @media (max-width: 1200px) {
+                .kpi-grid-recepcion { grid-template-columns: repeat(3, 1fr); }
+                .recepcion-main-grid { grid-template-columns: 1fr; }
+            }
+
+            @media (max-width: 768px) {
+                .kpi-grid-recepcion { grid-template-columns: 1fr; }
+                .filters-white-card { flex-direction: column; align-items: stretch; }
+                .filter-control { width: 100%; }
+                .btn-rec-buscar, .btn-rec-limpiar { margin-top: 0; width: 100%; }
+            }
+        /*]]>*/
+        </style>
+
+        <div class="recepcion-container">
+            <!-- ================= HERO BANNER ================= -->
+            <div class="recepcion-hero-banner">
+                <div class="recepcion-hero-overlay"></div>
+                <div class="recepcion-hero-left">
+                    <h2>Recepción</h2>
+                    <p>Brindamos una atención cálida y eficiente para una estancia inolvidable.</p>
+                </div>
+                <div class="recepcion-hero-right">
+                    <div><i class="far fa-calendar-alt"></i> Martes, 16 de septiembre de 2025</div>
+                    <div><i class="far fa-clock"></i> 10:24 a.m.</div>
+                </div>
+            </div>
+
+            <!-- Messages Alert -->
+            <h:messages id="recepcionMsg" globalOnly="true" 
+                        styleClass="alert-error-box" 
+                        style="list-style:none; padding:12px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; margin:0;" />
+
+            <!-- ================= 5 KPI CARDS ================= -->
+            <div class="kpi-grid-recepcion">
+                <!-- KPI 1 -->
+                <div class="rec-kpi-card kpi-rec-green">
+                    <div class="rec-kpi-left">
+                        <i class="fas fa-sign-in-alt rec-kpi-icon"></i>
+                        <div class="rec-kpi-text">
+                            <h3>#{adminRecepcionBean.checkinHoy}</h3>
+                            <p>Check-in Hoy</p>
+                        </div>
+                    </div>
+                    <div class="rec-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="rec-kpi-card kpi-rec-blue">
+                    <div class="rec-kpi-left">
+                        <i class="fas fa-sign-out-alt rec-kpi-icon"></i>
+                        <div class="rec-kpi-text">
+                            <h3>#{adminRecepcionBean.checkoutHoy}</h3>
+                            <p>Check-out Hoy</p>
+                        </div>
+                    </div>
+                    <div class="rec-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="rec-kpi-card kpi-rec-orange">
+                    <div class="rec-kpi-left">
+                        <i class="fas fa-user-friends rec-kpi-icon"></i>
+                        <div class="rec-kpi-text">
+                            <h3>#{adminRecepcionBean.huespedesEnCasa}</h3>
+                            <p>Huéspedes en Casa</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="rec-kpi-card kpi-rec-purple">
+                    <div class="rec-kpi-left">
+                        <i class="fas fa-bed rec-kpi-icon"></i>
+                        <div class="rec-kpi-text">
+                            <h3>#{adminRecepcionBean.llegadasHoy}</h3>
+                            <p>Llegadas de Hoy</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KPI 5 -->
+                <div class="rec-kpi-card kpi-rec-red">
+                    <div class="rec-kpi-left">
+                        <i class="far fa-calendar-alt rec-kpi-icon"></i>
+                        <div class="rec-kpi-text">
+                            <h3>#{adminRecepcionBean.salidasHoy}</h3>
+                            <p>Salidas de Hoy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SUB-TABS & ACTION ================= -->
+            <div class="recepcion-tabs-card">
+                <ul class="tabs-list">
+                    <li>
+                        <span class="tab-link active">
+                            <i class="fas fa-bed"></i> Estado de Habitaciones
+                        </span>
+                    </li>
+                    <li>
+                        <span class="tab-link" onclick="alert('Módulo de Tareas de Limpieza')">
+                            <i class="fas fa-broom"></i> Tareas de Limpieza
+                        </span>
+                    </li>
+                    <li>
+                        <span class="tab-link" onclick="alert('Módulo de Asignación de Personal')">
+                            <i class="fas fa-users-cog"></i> Asignación de Personal
+                        </span>
+                    </li>
+                    <li>
+                        <span class="tab-link" onclick="alert('Módulo de Insumos y Stock')">
+                            <i class="fas fa-boxes"></i> Insumos y Stock
+                        </span>
+                    </li>
+                </ul>
+
+                <button type="button" class="btn-walkin" onclick="openWalkinModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>Registrar Walk-in</span>
+                </button>
+            </div>
+
+            <!-- ================= FILTERS ROW ================= -->
+            <div class="filters-white-card">
+                <div class="filter-group">
+                    <label>Tipo de habitación</label>
+                    <select class="filter-control" id="recFiltroTipo" onchange="filtrarHabitaciones()">
+                        <option value="">Todos</option>
+                        <option value="Simple">Simple</option>
+                        <option value="Doble">Doble</option>
+                        <option value="Twin">Twin</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Estado</label>
+                    <select class="filter-control" id="recFiltroEstado" onchange="filtrarHabitaciones()">
+                        <option value="">Todos</option>
+                        <option value="Limpia">Limpia</option>
+                        <option value="En limpieza">En limpieza</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Fuera de servicio">Fuera de servicio</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Piso</label>
+                    <select class="filter-control" id="recFiltroPiso" onchange="filtrarHabitaciones()">
+                        <option value="">Todos</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+
+                <div class="filter-group filter-search-flex">
+                    <label>Buscar</label>
+                    <input type="text" id="recFiltroBuscar" placeholder="Buscar por número, tipo o estado..." onkeyup="filtrarHabitaciones()" />
+                </div>
+
+                <button type="button" class="btn-rec-buscar" onclick="filtrarHabitaciones()">
+                    <i class="fas fa-search"></i>
+                    <span>Buscar</span>
+                </button>
+
+                <button type="button" class="btn-rec-limpiar" onclick="limpiarFiltrosRec()">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Limpiar</span>
+                </button>
+            </div>
+
+            <!-- ================= 2-COLUMN MAIN CONTENT ================= -->
+            <div class="recepcion-main-grid">
+                <!-- Left: Table of Rooms -->
+                <div class="table-panel-card">
+                    <table class="table-rec" id="tablaHabitaciones">
+                        <thead>
+                            <tr>
+                                <th>Habitación</th>
+                                <th>Tipo</th>
+                                <th>Piso</th>
+                                <th>Estado</th>
+                                <th>Última limpieza</th>
+                                <th>Responsable</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recTbody">
+                            <!-- Loop over rooms connected to DB or exact template rows -->
+                            <ui:repeat value="#{adminRecepcionBean.habitaciones}" var="hab">
+                                <tr data-tipo="#{hab.tipo}" 
+                                    data-estado="#{hab.estadoDisplay}" 
+                                    data-piso="#{hab.piso}"
+                                    class="#{hab.numero eq '102' ? 'selected-row' : ''}">
+                                    <td><strong>#{hab.numero}</strong></td>
+                                    <td>#{hab.tipo}</td>
+                                    <td>#{hab.piso}</td>
+                                    <td>
+                                        <span class="status-pill #{hab.estadoDisplay eq 'Limpia' ? 'pill-limpia' : (hab.estadoDisplay eq 'En limpieza' ? 'pill-limpieza' : (hab.estadoDisplay eq 'Pendiente' ? 'pill-pendiente' : 'pill-mantenimiento'))}">
+                                            #{hab.estadoDisplay} <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    </td>
+                                    <td>#{hab.ultimaLimpieza}</td>
+                                    <td>#{hab.responsable}</td>
+                                    <td>
+                                        <div class="rec-actions-cell">
+                                            <button type="button" class="btn-rec-action btn-action-view" 
+                                                    title="Ver Detalle"
+                                                    onclick="cargarDetalleLateral('#{hab.numero}', '#{hab.tipo}', '#{hab.piso}', '#{hab.estadoDisplay}', '#{hab.ultimaLimpieza}', '#{hab.responsable}', '#{hab.idHabitacion}')">
+                                                <i class="far fa-eye"></i>
+                                            </button>
+                                            <button type="button" class="btn-rec-action btn-action-edit" title="Editar Estado"
+                                                    onclick="cargarDetalleLateral('#{hab.numero}', '#{hab.tipo}', '#{hab.piso}', '#{hab.estadoDisplay}', '#{hab.ultimaLimpieza}', '#{hab.responsable}', '#{hab.idHabitacion}')">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                            <button type="button" class="btn-rec-action btn-action-tasks" title="Ver Checklist"
+                                                    onclick="cargarDetalleLateral('#{hab.numero}', '#{hab.tipo}', '#{hab.piso}', '#{hab.estadoDisplay}', '#{hab.ultimaLimpieza}', '#{hab.responsable}', '#{hab.idHabitacion}')">
+                                                <i class="fas fa-list-ul"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+
+                    <!-- Pagination -->
+                    <div class="table-pagination-row">
+                        <span class="pagination-info" id="recInfoRegs">Mostrando 1 a 10 de 23 registros</span>
+                        <div class="pagination-btn-group">
+                            <button type="button" class="p-btn" disabled="disabled">Anterior</button>
+                            <button type="button" class="p-btn active">1</button>
+                            <button type="button" class="p-btn">2</button>
+                            <button type="button" class="p-btn">3</button>
+                            <button type="button" class="p-btn">Siguiente</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Detalle de Habitación Panel -->
+                <div class="detail-panel-card" id="cardDetalleLateral">
+                    <div class="detail-header-title">
+                        <i class="far fa-user"></i>
+                        <span>Detalle de Habitación</span>
+                    </div>
+
+                    <!-- Room Thumbnail Image -->
+                    <img src="#{request.contextPath}/resources/img/room-1.jpg" alt="Foto Habitación" class="detail-thumbnail-img" />
+
+                    <!-- Room Title & Status -->
+                    <div class="detail-room-title-row">
+                        <h4 id="detNumHab">Habitación 102</h4>
+                        <span id="detPillStatus" class="status-pill pill-limpieza">
+                            En limpieza <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </div>
+
+                    <!-- Room Attributes -->
+                    <div class="detail-info-list">
+                        <div class="detail-info-item">
+                            <i class="fas fa-bed"></i>
+                            <span id="detTipoHab">Simple</span>
+                        </div>
+                        <div class="detail-info-item">
+                            <i class="fas fa-user-friends"></i>
+                            <span id="detCapacidad">Capacidad: 1 huésped</span>
+                        </div>
+                        <div class="detail-info-item">
+                            <i class="fas fa-layer-group"></i>
+                            <span id="detPisoHab">Piso: 1</span>
+                        </div>
+                        <div class="detail-info-item">
+                            <i class="far fa-clock"></i>
+                            <span id="detUltLimpieza">Última limpieza: 16/09/2025 10:00</span>
+                        </div>
+                        <div class="detail-info-item">
+                            <i class="far fa-user"></i>
+                            <span id="detRespHab">Responsable: Carlos Mamani</span>
+                        </div>
+                    </div>
+
+                    <!-- Checklist: Tareas de Limpieza -->
+                    <div class="detail-checklist-section">
+                        <h5>Tareas de Limpieza</h5>
+                        <label class="check-task-item">
+                            <input type="checkbox" checked="checked" /> Cambio de sábanas
+                        </label>
+                        <label class="check-task-item">
+                            <input type="checkbox" checked="checked" /> Limpieza de baño
+                        </label>
+                        <label class="check-task-item">
+                            <input type="checkbox" checked="checked" /> Limpieza de habitación
+                        </label>
+                        <label class="check-task-item">
+                            <input type="checkbox" /> Reposición de amenities
+                        </label>
+                        <label class="check-task-item">
+                            <input type="checkbox" /> Verificación de minibar
+                        </label>
+                        <label class="check-task-item">
+                            <input type="checkbox" /> Inspección final
+                        </label>
+                    </div>
+
+                    <!-- Action Button: Marcar como Limpia (Connects to DB) -->
+                    <h:form id="frmMarcarLimpia">
+                        <h:inputHidden id="hidIdHabitacion" value="#{adminRecepcionBean.walkinIdHabitacion}" />
+                        <button type="submit" 
+                                jsf:action="#{adminRecepcionBean.marcarComoLimpia(null)}" 
+                                class="btn-mark-clean">
+                            <i class="fas fa-check"></i>
+                            <span>Marcar como Limpia</span>
+                        </button>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MODAL REGISTRAR WALK-IN (Connects to DB) ================= -->
+        <div class="modal-walkin-backdrop" id="modalWalkin">
+            <div class="modal-walkin-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                    <h3 style="margin:0; font-size:18px; font-weight:700; color:#1e293b;">Registrar Walk-in (Check-in Directo)</h3>
+                    <button type="button" onclick="closeWalkinModal()" style="background:none; border:none; font-size:18px; color:#94a3b8; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+
+                <h:form id="frmWalkin">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Nombres *</label>
+                            <h:inputText value="#{adminRecepcionBean.walkinNombre}" styleClass="filter-control" style="width:100%;" required="true" pt:placeholder="Ej. Roberto" />
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Apellidos</label>
+                            <h:inputText value="#{adminRecepcionBean.walkinApellidos}" styleClass="filter-control" style="width:100%;" pt:placeholder="Ej. Ramos" />
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Teléfono / Celular</label>
+                            <h:inputText value="#{adminRecepcionBean.walkinTelefono}" styleClass="filter-control" style="width:100%;" pt:placeholder="+51 987 654 321" />
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:4px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Días de Estadía</label>
+                            <h:inputText value="#{adminRecepcionBean.walkinDias}" styleClass="filter-control" style="width:100%;" pt:type="number" />
+                        </div>
+                        <div style="grid-column:span 2; display:flex; flex-direction:column; gap:4px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Habitación Asignada *</label>
+                            <h:selectOneMenu value="#{adminRecepcionBean.walkinIdHabitacion}" styleClass="filter-control" style="width:100%;" required="true">
+                                <f:selectItems value="#{adminRecepcionBean.habitaciones}" var="h"
+                                               itemValue="#{h.idHabitacion}" 
+                                               itemLabel="Hab. #{h.numero} (#{h.tipo}) - S/ #{h.precio} [#{h.estadoDisplay}]" />
+                            </h:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:22px;">
+                        <button type="button" class="btn-modal-cancel" onclick="closeWalkinModal()" style="padding:8px 16px; border:1px solid #dce4ec; background:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
+                        <button type="submit" jsf:action="#{adminRecepcionBean.registrarWalkin}" class="btn-walkin" style="margin:0;">
+                            <i class="fas fa-check"></i>
+                            <span>Confirmar Check-in en BD</span>
+                        </button>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <script>
+        //<![CDATA[
+            function cargarDetalleLateral(num, tipo, piso, estado, ultLimpieza, resp, idHab) {
+                document.getElementById('detNumHab').textContent = 'Habitación ' + num;
+                document.getElementById('detTipoHab').textContent = tipo;
+                document.getElementById('detPisoHab').textContent = 'Piso: ' + piso;
+                document.getElementById('detUltLimpieza').textContent = 'Última limpieza: ' + ultLimpieza;
+                document.getElementById('detRespHab').textContent = 'Responsable: ' + (resp || '-');
+                document.getElementById('detCapacidad').textContent = (tipo === 'Simple' ? 'Capacidad: 1 huésped' : (tipo === 'Doble' || tipo === 'Twin' ? 'Capacidad: 2 huéspedes' : 'Capacidad: 4 huéspedes'));
+
+                var pill = document.getElementById('detPillStatus');
+                pill.className = 'status-pill';
+                if (estado === 'Limpia') {
+                    pill.classList.add('pill-limpia');
+                    pill.innerHTML = 'Limpia <i class="fas fa-chevron-right"></i>';
+                } else if (estado === 'En limpieza') {
+                    pill.classList.add('pill-limpieza');
+                    pill.innerHTML = 'En limpieza <i class="fas fa-chevron-right"></i>';
+                } else if (estado === 'Pendiente') {
+                    pill.classList.add('pill-pendiente');
+                    pill.innerHTML = 'Pendiente <i class="fas fa-chevron-right"></i>';
+                } else {
+                    pill.classList.add('pill-mantenimiento');
+                    pill.innerHTML = 'Fuera de servicio <i class="fas fa-chevron-right"></i>';
+                }
+
+                // Actualizar id en el formulario
+                var hid = document.getElementById('frmMarcarLimpia:hidIdHabitacion');
+                if (hid) hid.value = idHab;
+
+                // Marcar fila seleccionada
+                var rows = document.querySelectorAll('#recTbody tr');
+                rows.forEach(function(r) { r.classList.remove('selected-row'); });
+                if (window.event && window.event.target) {
+                    var tr = window.event.target.closest('tr');
+                    if (tr) tr.classList.add('selected-row');
+                }
+            }
+
+            function filtrarHabitaciones() {
+                var search = document.getElementById('recFiltroBuscar').value.toLowerCase();
+                var tipo = document.getElementById('recFiltroTipo').value;
+                var estado = document.getElementById('recFiltroEstado').value;
+                var piso = document.getElementById('recFiltroPiso').value;
+
+                var rows = document.querySelectorAll('#recTbody tr');
+                var visibles = 0;
+
+                rows.forEach(function(r) {
+                    var rTipo = r.getAttribute('data-tipo');
+                    var rEstado = r.getAttribute('data-estado');
+                    var rPiso = r.getAttribute('data-piso');
+                    var text = r.textContent.toLowerCase();
+
+                    var matchSearch = (search === '' || text.indexOf(search) !== -1);
+                    var matchTipo = (tipo === '' || rTipo === tipo);
+                    var matchEstado = (estado === '' || rEstado === estado);
+                    var matchPiso = (piso === '' || rPiso === piso);
+
+                    if (matchSearch && matchTipo && matchEstado && matchPiso) {
+                        r.style.display = '';
+                        visibles++;
+                    } else {
+                        r.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('recInfoRegs').textContent = 'Mostrando ' + (visibles > 0 ? '1' : '0') + ' a ' + visibles + ' de ' + visibles + ' registros';
+            }
+
+            function limpiarFiltrosRec() {
+                document.getElementById('recFiltroBuscar').value = '';
+                document.getElementById('recFiltroTipo').value = '';
+                document.getElementById('recFiltroEstado').value = '';
+                document.getElementById('recFiltroPiso').value = '';
+                filtrarHabitaciones();
+            }
+
+            function openWalkinModal() {
+                document.getElementById('modalWalkin').style.display = 'flex';
+            }
+
+            function closeWalkinModal() {
+                document.getElementById('modalWalkin').style.display = 'none';
+            }
+        //]]>
+        </script>
+    </ui:define>
+</ui:composition>
+</html>

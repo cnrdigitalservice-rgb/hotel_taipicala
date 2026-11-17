@@ -1,0 +1,78 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">Reservas - Taipicala Hotel</ui:define>
+
+    <ui:define name="content">
+        <!-- Booking Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h6 class="section-title text-center text-primary text-uppercase">Reserva de Habitaciones</h6>
+                    <h1 class="mb-5">Realice su <span class="text-primary text-uppercase">Reserva</span></h1>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-6">
+                        <div class="row g-3">
+                            <div class="col-6 text-end">
+                                <img class="img-fluid rounded w-75 wow zoomIn" data-wow-delay="0.1s" src="#{request.contextPath}/resources/img/about-1.jpg" style="margin-top: 25%;" />
+                            </div>
+                            <div class="col-6 text-start">
+                                <img class="img-fluid rounded w-100 wow zoomIn" data-wow-delay="0.3s" src="#{request.contextPath}/resources/img/about-2.jpg" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <!-- Bootfaces Form for Booking -->
+                        <h:form id="bookingForm" styleClass="wow fadeInUp">
+                            <b:messages />
+                            <b:row>
+                                <b:column col-md="6">
+                                    <b:inputText label="Nombres" value="#{reservaBean.cliente.nombre}" required="true" requiredMessage="El nombre es obligatorio"/>
+                                </b:column>
+                                <b:column col-md="6">
+                                    <b:inputText label="Apellidos" value="#{reservaBean.cliente.apellidos}" required="true" />
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column col-md="6">
+                                    <b:inputText label="Email" type="email" value="#{reservaBean.cliente.email}" required="true" />
+                                </b:column>
+                                <b:column col-md="6">
+                                    <b:inputText label="Teléfono" value="#{reservaBean.cliente.telefono}" />
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column col-md="12">
+                                    <b:selectOneMenu label="Seleccione Habitación" value="#{reservaBean.idHabitacionSeleccionada}">
+                                        <f:selectItems value="#{habitacionBean.habitacionesDisponibles}" var="hab" 
+                                                       itemValue="#{hab.idHabitacion}" itemLabel="#{hab.tipo} - ##{hab.numero} ($#{hab.precio})" />
+                                    </b:selectOneMenu>
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column col-md="6">
+                                    <b:dateTimePicker label="Fecha Entrada" format="DD/MM/YYYY" value="#{reservaBean.reserva.fechaEntrada}" />
+                                </b:column>
+                                <b:column col-md="6">
+                                    <b:dateTimePicker label="Fecha Salida" format="DD/MM/YYYY" value="#{reservaBean.reserva.fechaSalida}" />
+                                </b:column>
+                            </b:row>
+                            <b:row>
+                                <b:column col-md="12" styleClass="mt-4">
+                                    <b:commandButton value="Confirmar Reserva" action="#{reservaBean.guardarReserva}" look="primary" styleClass="w-100 py-3" size="lg" />
+                                </b:column>
+                            </b:row>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Booking End -->
+    </ui:define>
+
+</ui:composition>

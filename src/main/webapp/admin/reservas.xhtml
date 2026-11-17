@@ -1,0 +1,974 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+<ui:composition template="/admin/template.xhtml">
+    <ui:define name="title">Reservas - Hotel Taipicala</ui:define>
+    
+    <ui:define name="content">
+        <style>
+        /*<![CDATA[*/
+            .reservas-container {
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            /* ================= HERO BANNER ================= */
+            .reservas-hero-banner {
+                position: relative;
+                border-radius: 18px;
+                overflow: hidden;
+                padding: 34px 32px;
+                background-image: url('#{request.contextPath}/resources/img/reservas-banner.jpg');
+                background-size: cover;
+                background-position: center;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                display: flex;
+                align-items: center;
+            }
+
+            .reservas-hero-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(90deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(15, 23, 42, 0.35) 100%);
+                z-index: 1;
+            }
+
+            .reservas-hero-content {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                color: #ffffff;
+            }
+
+            .hero-calendar-icon {
+                font-size: 38px;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .hero-title-group h2 {
+                font-size: 28px;
+                font-weight: 800;
+                color: #ffffff;
+                margin: 0 0 4px 0;
+                letter-spacing: -0.4px;
+            }
+
+            .hero-title-group p {
+                font-size: 14px;
+                color: rgba(255, 255, 255, 0.9);
+                margin: 0;
+                font-weight: 400;
+            }
+
+            /* ================= 4 KPI CARDS ================= */
+            .kpi-grid-reservas {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+
+            .res-kpi-card {
+                border-radius: 16px;
+                padding: 20px 22px;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.08);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .res-kpi-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.12);
+            }
+
+            .res-kpi-blue { background: #0284c7; }
+            .res-kpi-green { background: #10b981; }
+            .res-kpi-orange { background: #f59e0b; }
+            .res-kpi-purple { background: #8b5cf6; }
+
+            .res-kpi-left {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .res-kpi-icon-box {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background-color: rgba(255, 255, 255, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                color: #ffffff;
+            }
+
+            .res-kpi-info h3 {
+                font-size: 28px;
+                font-weight: 800;
+                margin: 0 0 2px 0;
+                line-height: 1.1;
+            }
+
+            .res-kpi-info p {
+                font-size: 12px;
+                margin: 0;
+                color: rgba(255, 255, 255, 0.9);
+                font-weight: 500;
+                white-space: nowrap;
+            }
+
+            .res-kpi-arrow {
+                font-size: 13px;
+                color: rgba(255, 255, 255, 0.75);
+                transition: transform 0.2s;
+            }
+
+            .res-kpi-card:hover .res-kpi-arrow {
+                transform: translateX(3px);
+                color: #ffffff;
+            }
+
+            /* ================= MAIN WHITE PANEL ================= */
+            .reservas-main-card {
+                background: #ffffff;
+                border-radius: 20px;
+                padding: 26px 28px;
+                border: 1px solid #edf2f7;
+                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+            }
+
+            .reservas-card-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 24px;
+            }
+
+            .reservas-header-title {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .reservas-header-title i {
+                font-size: 18px;
+                color: #1e293b;
+            }
+
+            .reservas-header-title h3 {
+                font-size: 18px;
+                font-weight: 700;
+                color: #1e293b;
+                margin: 0;
+            }
+
+            .btn-nueva-reserva {
+                background-color: #0284c7;
+                color: #ffffff;
+                border: none;
+                border-radius: 10px;
+                padding: 10px 18px;
+                font-size: 13.5px;
+                font-weight: 600;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+                transition: all 0.2s ease;
+            }
+
+            .btn-nueva-reserva:hover {
+                background-color: #0369a1;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+            }
+
+            /* ================= FILTERS ROW ================= */
+            .filters-bar {
+                display: flex;
+                align-items: flex-end;
+                gap: 14px;
+                margin-bottom: 24px;
+                flex-wrap: wrap;
+            }
+
+            .filter-col {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .filter-label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #475569;
+            }
+
+            .filter-date-wrapper {
+                position: relative;
+                width: 145px;
+            }
+
+            .filter-date-input {
+                width: 100%;
+                height: 38px;
+                border: 1px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 32px 0 12px;
+                font-size: 13px;
+                font-family: inherit;
+                color: #1e293b;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+
+            .filter-date-input:focus {
+                border-color: #0284c7;
+            }
+
+            .filter-date-wrapper i {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+                font-size: 13px;
+                pointer-events: none;
+            }
+
+            .filter-select {
+                height: 38px;
+                border: 1px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-family: inherit;
+                color: #1e293b;
+                outline: none;
+                cursor: pointer;
+                background-color: #ffffff;
+                transition: border-color 0.2s;
+                min-width: 130px;
+            }
+
+            .filter-select:focus {
+                border-color: #0284c7;
+            }
+
+            .filter-search-wrapper {
+                flex: 1;
+                min-width: 180px;
+            }
+
+            .filter-search-input {
+                width: 100%;
+                height: 38px;
+                border: 1px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-family: inherit;
+                color: #1e293b;
+                outline: none;
+                transition: border-color 0.2s;
+            }
+
+            .filter-search-input:focus {
+                border-color: #0284c7;
+            }
+
+            .filter-buttons-group {
+                display: flex;
+                gap: 8px;
+            }
+
+            .btn-filter-buscar {
+                height: 38px;
+                background-color: #0284c7;
+                color: #ffffff;
+                border: none;
+                border-radius: 8px;
+                padding: 0 16px;
+                font-size: 13px;
+                font-weight: 600;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+            .btn-filter-buscar:hover {
+                background-color: #0369a1;
+            }
+
+            .btn-filter-limpiar {
+                height: 38px;
+                background-color: #f1f5f9;
+                color: #475569;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 0 14px;
+                font-size: 13px;
+                font-weight: 600;
+                font-family: inherit;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-filter-limpiar:hover {
+                background-color: #e2e8f0;
+                color: #1e293b;
+            }
+
+            /* ================= DATA TABLE ================= */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+            .reservas-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: 13px;
+                text-align: left;
+            }
+
+            .reservas-table th {
+                font-size: 12px;
+                font-weight: 700;
+                color: #0f172a;
+                padding: 12px 14px;
+                border-bottom: 1.5px solid #edf2f7;
+                white-space: nowrap;
+            }
+
+            .reservas-table td {
+                padding: 14px;
+                color: #334155;
+                border-bottom: 1px solid #f8fafc;
+                vertical-align: middle;
+            }
+
+            .reservas-table tbody tr {
+                transition: background-color 0.15s;
+            }
+
+            .reservas-table tbody tr:hover {
+                background-color: #f8fafc;
+            }
+
+            .res-badge {
+                display: inline-block;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffffff;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            .badge-confirmada { background-color: #10b981; }
+            .badge-checkin { background-color: #0284c7; }
+            .badge-pendiente { background-color: #f59e0b; }
+            .badge-cancelada { background-color: #ef4444; }
+
+            .action-buttons-cell {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .btn-action-view {
+                width: 30px;
+                height: 30px;
+                border-radius: 6px;
+                background-color: #f1f5f9;
+                border: 1px solid #e2e8f0;
+                color: #475569;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .btn-action-view:hover {
+                background-color: #e2e8f0;
+                color: #0f172a;
+            }
+
+            .btn-action-edit {
+                width: 30px;
+                height: 30px;
+                border-radius: 6px;
+                background-color: #0284c7;
+                border: none;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .btn-action-edit:hover {
+                background-color: #0369a1;
+                color: #ffffff;
+            }
+
+            .btn-action-delete {
+                width: 30px;
+                height: 30px;
+                border-radius: 6px;
+                background-color: #ef4444;
+                border: none;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .btn-action-delete:hover {
+                background-color: #dc2626;
+                color: #ffffff;
+            }
+
+            .table-pagination-footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-top: 24px;
+                padding-top: 18px;
+                border-top: 1px solid #edf2f7;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .table-info-records {
+                font-size: 12.5px;
+                color: #64748b;
+            }
+
+            .pagination-controls {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .page-btn {
+                padding: 6px 14px;
+                font-size: 12.5px;
+                font-weight: 500;
+                font-family: inherit;
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                background-color: #ffffff;
+                color: #475569;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .page-btn.active {
+                background-color: #0284c7;
+                color: #ffffff;
+                border-color: #0284c7;
+                font-weight: 700;
+            }
+
+            .modal-backdrop {
+                display: none;
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(15, 23, 42, 0.6);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                align-items: center; justify-content: center;
+                padding: 20px;
+            }
+
+            .modal-card {
+                background: #ffffff;
+                border-radius: 20px;
+                max-width: 520px; width: 100%;
+                padding: 28px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            }
+
+            .modal-header-row {
+                display: flex; align-items: center; justify-content: space-between;
+                margin-bottom: 20px;
+            }
+
+            .modal-header-row h3 { font-size: 18px; font-weight: 700; color: #1e293b; margin: 0; }
+            .btn-close-modal { background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; }
+
+            .modal-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+            .modal-form-group { display: flex; flex-direction: column; gap: 6px; }
+            .modal-form-group.full-width { grid-column: span 2; }
+            .modal-form-group label { font-size: 12.5px; font-weight: 600; color: #334155; }
+            .modal-form-group input, .modal-form-group select {
+                height: 38px; border: 1.5px solid #dce4ec; border-radius: 8px; padding: 0 12px; font-size: 13px; font-family: inherit; outline: none;
+            }
+
+            .modal-date-picker-wrap {
+                position: relative;
+                width: 100%;
+            }
+
+            .modal-form-group input.modal-date-picker {
+                height: 40px;
+                width: 100%;
+                border: 1.5px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13.5px;
+                font-family: inherit;
+                color: #1e293b;
+                background-color: #ffffff;
+                cursor: pointer;
+                outline: none;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            .modal-form-group input.modal-date-picker:focus {
+                border-color: #0284c7;
+                box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            }
+
+            .modal-form-group input.modal-date-picker::-webkit-calendar-picker-indicator {
+                cursor: pointer;
+                padding: 4px;
+                border-radius: 4px;
+                filter: invert(40%) sepia(85%) saturate(1450%) hue-rotate(175deg) brightness(90%) contrast(95%);
+                transition: transform 0.15s ease, opacity 0.2s;
+            }
+
+            .modal-form-group input.modal-date-picker::-webkit-calendar-picker-indicator:hover {
+                transform: scale(1.15);
+            }
+            .modal-actions-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+            .btn-modal-cancel { padding: 9px 18px; border-radius: 8px; border: 1px solid #dce4ec; background-color: #ffffff; font-size: 13px; font-weight: 600; color: #64748b; cursor: pointer; }
+            .btn-modal-save { padding: 9px 20px; border-radius: 8px; border: none; background-color: #0284c7; font-size: 13px; font-weight: 600; color: #ffffff; cursor: pointer; }
+
+            @media (max-width: 1050px) { .kpi-grid-reservas { grid-template-columns: repeat(2, 1fr); } }
+            @media (max-width: 680px) { .kpi-grid-reservas { grid-template-columns: 1fr; } .filters-bar { flex-direction: column; align-items: stretch; } .filter-date-wrapper, .filter-select { width: 100%; } }
+        /*]]>*/
+        </style>
+
+        <div class="reservas-container">
+            <!-- Messages from Database Operations -->
+            <h:messages id="reservaMessages" globalOnly="true" 
+                        style="list-style:none; padding:12px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; margin:0;" />
+
+            <!-- ================= HERO BANNER ================= -->
+            <div class="reservas-hero-banner">
+                <div class="reservas-hero-overlay"></div>
+                <div class="reservas-hero-content">
+                    <div class="hero-calendar-icon">
+                        <i class="far fa-calendar-alt"></i>
+                    </div>
+                    <div class="hero-title-group">
+                        <h2>Reservas</h2>
+                        <p>Gestiona las reservas de tu hotel de manera fácil y eficiente.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= 4 KPI CARDS (Connected to DB) ================= -->
+            <div class="kpi-grid-reservas">
+                <div class="res-kpi-card res-kpi-blue">
+                    <div class="res-kpi-left">
+                        <div class="res-kpi-icon-box"><i class="far fa-calendar-alt"></i></div>
+                        <div class="res-kpi-info">
+                            <h3>#{adminReservaBean.totalActivas}</h3>
+                            <p>Reservas Activas</p>
+                        </div>
+                    </div>
+                    <div class="res-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <div class="res-kpi-card res-kpi-green">
+                    <div class="res-kpi-left">
+                        <div class="res-kpi-icon-box"><i class="fas fa-check"></i></div>
+                        <div class="res-kpi-info">
+                            <h3>#{adminReservaBean.checkinHoy}</h3>
+                            <p>Check-in Hoy</p>
+                        </div>
+                    </div>
+                    <div class="res-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <div class="res-kpi-card res-kpi-orange">
+                    <div class="res-kpi-left">
+                        <div class="res-kpi-icon-box"><i class="fas fa-sign-out-alt"></i></div>
+                        <div class="res-kpi-info">
+                            <h3>#{adminReservaBean.checkoutHoy}</h3>
+                            <p>Check-out Hoy</p>
+                        </div>
+                    </div>
+                    <div class="res-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <div class="res-kpi-card res-kpi-purple">
+                    <div class="res-kpi-left">
+                        <div class="res-kpi-icon-box"><i class="far fa-calendar-alt"></i></div>
+                        <div class="res-kpi-info">
+                            <h3>#{adminReservaBean.totalMes}</h3>
+                            <p>Total del Mes</p>
+                        </div>
+                    </div>
+                    <div class="res-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </div>
+
+            <!-- ================= MAIN PANEL: LISTADO DE RESERVAS ================= -->
+            <div class="reservas-main-card">
+                <div class="reservas-card-header">
+                    <div class="reservas-header-title">
+                        <i class="fas fa-list-ul"></i>
+                        <h3>Listado de Reservas</h3>
+                    </div>
+                    <button type="button" class="btn-nueva-reserva" onclick="openModalNuevaReserva()">
+                        <i class="fas fa-plus"></i>
+                        <span>Nueva Reserva</span>
+                    </button>
+                </div>
+
+                <!-- Filters Bar -->
+                <div class="filters-bar">
+                    <div class="filter-col">
+                        <label class="filter-label">Fecha desde</label>
+                        <div class="filter-date-wrapper">
+                            <input type="text" class="filter-date-input" id="filtroFechaDesde" value="01/09/2025" />
+                            <i class="far fa-calendar-alt"></i>
+                        </div>
+                    </div>
+
+                    <div class="filter-col">
+                        <label class="filter-label">Fecha hasta</label>
+                        <div class="filter-date-wrapper">
+                            <input type="text" class="filter-date-input" id="filtroFechaHasta" value="30/09/2025" />
+                            <i class="far fa-calendar-alt"></i>
+                        </div>
+                    </div>
+
+                    <div class="filter-col">
+                        <label class="filter-label">Estado</label>
+                        <select class="filter-select" id="filtroEstado" onchange="filtrarReservas()">
+                            <option value="">Todos</option>
+                            <option value="Confirmada">Confirmada</option>
+                            <option value="Check-in">Check-in</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Cancelada">Cancelada</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-col">
+                        <label class="filter-label">Tipo de habitación</label>
+                        <select class="filter-select" id="filtroTipoHabitacion" onchange="filtrarReservas()">
+                            <option value="">Todos</option>
+                            <option value="Simple">Simple</option>
+                            <option value="Doble">Doble</option>
+                            <option value="Twin">Twin</option>
+                            <option value="Suite">Suite</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-col filter-search-wrapper">
+                        <label class="filter-label">Buscar</label>
+                        <input type="text" class="filter-search-input" id="filtroBuscar" placeholder="Nombre, DNI o código..." onkeyup="filtrarReservas()" />
+                    </div>
+
+                    <div class="filter-buttons-group">
+                        <button type="button" class="btn-filter-buscar" onclick="filtrarReservas()">
+                            <i class="fas fa-search"></i>
+                            <span>Buscar</span>
+                        </button>
+                        <button type="button" class="btn-filter-limpiar" onclick="limpiarFiltros()">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Limpiar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table connected to MySQL Database -->
+                <h:form id="frmTablaReservas">
+                    <div class="table-responsive">
+                        <table class="reservas-table" id="tablaReservas">
+                            <thead>
+                                <tr>
+                                    <th># Reserva</th>
+                                    <th>Cliente</th>
+                                    <th>Habitación</th>
+                                    <th>Fecha Entrada</th>
+                                    <th>Fecha Salida</th>
+                                    <th>No. Huéspedes</th>
+                                    <th>Estado</th>
+                                    <th>Total (S/)</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservasTbody">
+                                <ui:repeat value="#{adminReservaBean.reservas}" var="res">
+                                    <tr data-estado="#{res.estadoDisplay}" data-tipo="#{res.habitacion.tipo}">
+                                        <td><strong>#{res.codigo}</strong></td>
+                                        <td>#{res.cliente.nombre} #{res.cliente.apellidos}</td>
+                                        <td>#{res.habitacion.numero} - #{res.habitacion.tipo}</td>
+                                        <td>
+                                            <h:outputText value="#{res.fechaEntrada}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </td>
+                                        <td>
+                                            <h:outputText value="#{res.fechaSalida}">
+                                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                                            </h:outputText>
+                                        </td>
+                                        <td><i class="fas #{res.huespedes eq 1 ? 'fa-user' : 'fa-user-friends'} text-muted"></i> #{res.huespedes}</td>
+                                        <td>
+                                            <span class="res-badge #{res.estadoDisplay eq 'Confirmada' ? 'badge-confirmada' : (res.estadoDisplay eq 'Check-in' ? 'badge-checkin' : (res.estadoDisplay eq 'Cancelada' ? 'badge-cancelada' : 'badge-pendiente'))}">
+                                                #{res.estadoDisplay}
+                                            </span>
+                                        </td>
+                                        <td>#{res.totalCalculado}</td>
+                                        <td>
+                                            <div class="action-buttons-cell">
+                                                <button type="button" class="btn-action-view" title="Ver Detalle" 
+                                                        onclick="verDetalle('#{res.codigo}', '#{res.cliente.nombre} #{res.cliente.apellidos}', '#{res.habitacion.numero} - #{res.habitacion.tipo}', '#{res.fechaEntrada}', '#{res.fechaSalida}', '#{res.huespedes}', '#{res.estadoDisplay}', '#{res.totalCalculado}')">
+                                                    <i class="far fa-eye"></i>
+                                                </button>
+                                                <h:commandLink action="#{adminReservaBean.confirmarReserva(res.idReserva)}" 
+                                                               styleClass="btn-action-edit" 
+                                                               title="Confirmar Reserva en BD">
+                                                    <i class="fas fa-check"></i>
+                                                </h:commandLink>
+                                                <h:commandLink action="#{adminReservaBean.eliminarReserva(res.idReserva)}" 
+                                                               styleClass="btn-action-delete" 
+                                                               title="Eliminar de BD" 
+                                                               onclick="return confirm('¿Está seguro de eliminar esta reserva de la base de datos?');">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </h:commandLink>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                </h:form>
+
+                <!-- Footer Pagination -->
+                <div class="table-pagination-footer">
+                    <span class="table-info-records" id="infoRecords">Mostrando 1 a #{adminReservaBean.reservas.size()} de #{adminReservaBean.reservas.size()} registros</span>
+                    <div class="pagination-controls">
+                        <button type="button" class="page-btn" disabled="disabled">Anterior</button>
+                        <button type="button" class="page-btn active">1</button>
+                        <button type="button" class="page-btn" disabled="disabled">Siguiente</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MODAL NUEVA RESERVA (Connects to DB) ================= -->
+        <div class="modal-backdrop" id="modalReserva">
+            <div class="modal-card">
+                <div class="modal-header-row">
+                    <h3 id="modalReservaTitle">Nueva Reserva</h3>
+                    <button type="button" class="btn-close-modal" onclick="closeModalReserva()"><i class="fas fa-times"></i></button>
+                </div>
+                <h:form id="frmModalReserva">
+                    <div class="modal-form-grid">
+                        <div class="modal-form-group">
+                            <label>Nombre del Cliente *</label>
+                            <h:inputText value="#{adminReservaBean.nuevoClienteNombre}" required="true" pt:placeholder="Ej. Carlos" />
+                        </div>
+                        <div class="modal-form-group">
+                            <label>Apellidos *</label>
+                            <h:inputText value="#{adminReservaBean.nuevoClienteApellidos}" required="true" pt:placeholder="Ej. Mendoza" />
+                        </div>
+                        <div class="modal-form-group">
+                            <label>Email</label>
+                            <h:inputText value="#{adminReservaBean.nuevoClienteEmail}" pt:placeholder="cliente@gmail.com" />
+                        </div>
+                        <div class="modal-form-group">
+                            <label>Teléfono</label>
+                            <h:inputText value="#{adminReservaBean.nuevoClienteTelefono}" pt:placeholder="987654321" />
+                        </div>
+                        <div class="modal-form-group full-width">
+                            <label>Habitación *</label>
+                            <h:selectOneMenu value="#{adminReservaBean.nuevaHabitacionId}" required="true">
+                                <f:selectItem itemLabel="101 - Simple (S/ 120.00)" itemValue="1" />
+                                <f:selectItem itemLabel="102 - Simple (S/ 120.00)" itemValue="2" />
+                                <f:selectItem itemLabel="201 - Doble (S/ 180.00)" itemValue="3" />
+                                <f:selectItem itemLabel="203 - Doble (S/ 180.00)" itemValue="4" />
+                                <f:selectItem itemLabel="302 - Twin (S/ 200.00)" itemValue="5" />
+                                <f:selectItem itemLabel="305 - Twin (S/ 200.00)" itemValue="6" />
+                                <f:selectItem itemLabel="401 - Suite (S/ 320.00)" itemValue="7" />
+                                <f:selectItem itemLabel="501 - Suite (S/ 320.00)" itemValue="8" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="modal-form-group">
+                            <label>Fecha Entrada *</label>
+                            <div class="modal-date-picker-wrap">
+                                <h:inputText id="txtFechaEntrada" value="#{adminReservaBean.nuevaFechaEntradaStr}" 
+                                             pt:type="date" 
+                                             pt:onclick="try{this.showPicker()}catch(e){}"
+                                             styleClass="modal-date-picker"
+                                             required="true" />
+                            </div>
+                        </div>
+                        <div class="modal-form-group">
+                            <label>Fecha Salida *</label>
+                            <div class="modal-date-picker-wrap">
+                                <h:inputText id="txtFechaSalida" value="#{adminReservaBean.nuevaFechaSalidaStr}" 
+                                             pt:type="date" 
+                                             pt:onclick="try{this.showPicker()}catch(e){}"
+                                             styleClass="modal-date-picker"
+                                             required="true" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions-footer">
+                        <button type="button" class="btn-modal-cancel" onclick="closeModalReserva()">Cancelar</button>
+                        <button type="submit" jsf:action="#{adminReservaBean.guardarNuevaReserva}" class="btn-modal-save">Guardar Reserva en BD</button>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <!-- ================= MODAL VER DETALLE ================= -->
+        <div class="modal-backdrop" id="modalDetalle">
+            <div class="modal-card">
+                <div class="modal-header-row">
+                    <h3 id="detCodigo">Detalle de Reserva</h3>
+                    <button type="button" class="btn-close-modal" onclick="closeModalDetalle()"><i class="fas fa-times"></i></button>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:12px; font-size:13.5px; color:#334155; line-height:1.6;">
+                    <div><strong>Cliente:</strong> <span id="detCliente"></span></div>
+                    <div><strong>Habitación:</strong> <span id="detHabitacion"></span></div>
+                    <div><strong>Fecha Entrada:</strong> <span id="detEntrada"></span></div>
+                    <div><strong>Fecha Salida:</strong> <span id="detSalida"></span></div>
+                    <div><strong>Huéspedes:</strong> <span id="detHuespedes"></span></div>
+                    <div><strong>Estado:</strong> <span id="detEstado"></span></div>
+                    <div><strong>Total:</strong> S/ <span id="detTotal"></span></div>
+                </div>
+                <div class="modal-actions-footer">
+                    <button type="button" class="btn-modal-cancel" onclick="closeModalDetalle()">Cerrar</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        //<![CDATA[
+            function filtrarReservas() {
+                var search = document.getElementById('filtroBuscar').value.toLowerCase();
+                var estado = document.getElementById('filtroEstado').value;
+                var tipo = document.getElementById('filtroTipoHabitacion').value;
+                var tbody = document.getElementById('reservasTbody');
+                var rows = tbody.getElementsByTagName('tr');
+                var visibles = 0;
+
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i];
+                    var rEstado = r.getAttribute('data-estado');
+                    var rTipo = r.getAttribute('data-tipo');
+                    var text = r.textContent.toLowerCase();
+
+                    var matchSearch = (search === '' || text.indexOf(search) !== -1);
+                    var matchEstado = (estado === '' || rEstado === estado);
+                    var matchTipo = (tipo === '' || rTipo === tipo);
+
+                    if (matchSearch && matchEstado && matchTipo) {
+                        r.style.display = '';
+                        visibles++;
+                    } else {
+                        r.style.display = 'none';
+                    }
+                }
+                document.getElementById('infoRecords').textContent = 'Mostrando ' + (visibles > 0 ? '1' : '0') + ' a ' + visibles + ' de ' + visibles + ' registros';
+            }
+
+            function limpiarFiltros() {
+                document.getElementById('filtroBuscar').value = '';
+                document.getElementById('filtroEstado').value = '';
+                document.getElementById('filtroTipoHabitacion').value = '';
+                filtrarReservas();
+            }
+
+            function openModalNuevaReserva() {
+                document.getElementById('modalReserva').style.display = 'flex';
+            }
+
+            function closeModalReserva() {
+                document.getElementById('modalReserva').style.display = 'none';
+            }
+
+            function verDetalle(cod, cli, hab, ent, sal, hues, est, tot) {
+                document.getElementById('detCodigo').textContent = 'Detalle de Reserva ' + cod;
+                document.getElementById('detCliente').textContent = cli;
+                document.getElementById('detHabitacion').textContent = hab;
+                document.getElementById('detEntrada').textContent = ent;
+                document.getElementById('detSalida').textContent = sal;
+                document.getElementById('detHuespedes').textContent = hues + ' persona(s)';
+                document.getElementById('detEstado').textContent = est;
+                document.getElementById('detTotal').textContent = tot;
+                document.getElementById('modalDetalle').style.display = 'flex';
+            }
+
+            function closeModalDetalle() {
+                document.getElementById('modalDetalle').style.display = 'none';
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var ent = document.querySelector("input[id*='txtFechaEntrada']");
+                var sal = document.querySelector("input[id*='txtFechaSalida']");
+                if (ent && sal) {
+                    var syncDates = function() {
+                        if (ent.value) {
+                            sal.min = ent.value;
+                            if (sal.value && sal.value < ent.value) {
+                                sal.value = ent.value;
+                            }
+                        }
+                    };
+                    ent.addEventListener('change', syncDates);
+                    syncDates();
+                }
+            });
+        //]]>
+        </script>
+    </ui:define>
+</ui:composition>
+</html>

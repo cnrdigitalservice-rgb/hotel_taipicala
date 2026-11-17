@@ -1,0 +1,545 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><ui:insert name="title">Hotel Taipicala - Panel Administrativo</ui:insert></title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="#{request.contextPath}/resources/img/taipicala-logo-transparent.png" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=Poppins:wght@300;400;500;600;700&amp;display=swap" />
+
+    <style>
+    /*<![CDATA[*/
+        /* ================= RESET Y BASE ================= */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f7fb;
+            color: #1e293b;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: 255px;
+            background-color: #132238;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        /* Sidebar Brand */
+        .sidebar-brand {
+            padding: 24px 22px 20px 22px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .sidebar-brand-icon {
+            font-size: 24px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-brand-text h1 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .sidebar-brand-text p {
+            font-size: 10.5px;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 2px 0 0 0;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        /* Navigation Section */
+        .sidebar-nav {
+            padding: 20px 14px;
+            flex: 1;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            color: #5f7596;
+            text-transform: uppercase;
+            padding: 0 12px 12px 12px;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            color: #8da2bd;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item a i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            color: #8da2bd;
+            transition: color 0.2s ease;
+        }
+
+        .nav-item a:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-item a:hover i {
+            color: #ffffff;
+        }
+
+        /* Active Item */
+        .nav-item.active a {
+            background-color: #1976d2;
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.35);
+        }
+
+        .nav-item.active a i {
+            color: #ffffff;
+        }
+
+        /* ================= MAIN WRAPPER ================= */
+        .main-wrapper {
+            margin-left: 255px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: calc(100% - 255px);
+            transition: all 0.3s ease;
+        }
+
+        /* ================= TOP NAVBAR ================= */
+        .top-navbar {
+            height: 68px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #edf2f7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .btn-hamburger {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #64748b;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .btn-hamburger:hover {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* Search Bar */
+        .navbar-search {
+            position: relative;
+            flex: 1;
+            max-width: 420px;
+        }
+
+        .navbar-search i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 40px;
+            padding: 0 16px 0 38px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 13.5px;
+            color: #1e293b;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            background-color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        /* Navbar Right */
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        /* Notifications */
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 8px;
+            transition: color 0.2s;
+        }
+
+        .notification-btn:hover {
+            color: #1e293b;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 0px;
+            background-color: #ef4444;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+        }
+
+        /* User Profile Pill */
+        .user-profile-pill {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 8px;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .user-profile-pill:hover {
+            background-color: #f8fafc;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.25;
+        }
+
+        .user-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .user-role {
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .btn-logout {
+            background: none;
+            border: 1px solid #fee2e2;
+            color: #ef4444;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+
+        /* ================= MAIN CONTENT CONTAINER ================= */
+        .content-container {
+            padding: 28px 32px 40px 32px;
+            flex: 1;
+        }
+
+        /* ================= FOOTER ================= */
+        .admin-footer {
+            padding: 18px 32px;
+            font-size: 12.5px;
+            color: #94a3b8;
+            border-top: 1px solid #edf2f7;
+            background-color: #ffffff;
+            text-align: left;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+            .top-navbar {
+                padding: 0 16px;
+            }
+            .content-container {
+                padding: 20px 16px;
+            }
+            .user-info {
+                display: none;
+            }
+        }
+    /*]]>*/
+    </style>
+</h:head>
+
+<h:body>
+    <div class="admin-layout">
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="sidebar" id="adminSidebar">
+            <!-- Brand -->
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">
+                    <i class="fas fa-bed"></i>
+                </div>
+                <div class="sidebar-brand-text">
+                    <h1>Hotel Taipicala</h1>
+                    <p>Más que un hotel, una experiencia</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Navegación</div>
+                <ul class="nav-list">
+                    <li class="nav-item #{view.viewId.contains('dashboard') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/dashboard.xhtml">
+                            <i class="fas fa-palette"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item #{view.viewId.contains('reservas') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/reservas.xhtml">
+                            <i class="far fa-calendar-alt"></i>
+                            <span>Reservas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item #{view.viewId.contains('recepcion') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/recepcion.xhtml">
+                            <i class="fas fa-key"></i>
+                            <span>Recepción (Check-in)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item #{view.viewId.contains('housekeeping') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/housekeeping.xhtml">
+                            <i class="fas fa-bed"></i>
+                            <span>Housekeeping</span>
+                        </a>
+                    </li>
+                    <li class="nav-item #{view.viewId.contains('facturacion') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/facturacion.xhtml">
+                            <i class="far fa-money-bill-alt"></i>
+                            <span>Facturación</span>
+                        </a>
+                    </li>
+                    <li class="nav-item #{view.viewId.contains('reportes') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/reportes.xhtml">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                    <li class="nav-item #{view.viewId.contains('usuarios') ? 'active' : ''}">
+                        <a href="#{request.contextPath}/admin/usuarios.xhtml">
+                            <i class="fas fa-users"></i>
+                            <span>Usuarios</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- ================= MAIN WRAPPER ================= -->
+        <div class="main-wrapper">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="navbar-left">
+                    <button type="button" class="btn-hamburger" id="sidebarToggle" onclick="toggleSidebar()" title="Alternar Menú">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="navbar-search">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="search-input" placeholder="Buscar en el sistema..." />
+                    </div>
+                </div>
+
+                <div class="navbar-right">
+                    <!-- Notification Bell -->
+                    <button type="button" class="notification-btn" title="Notificaciones">
+                        <i class="far fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+
+                    <!-- User Profile -->
+                    <div class="user-profile-pill">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="user-info">
+                            <span class="user-name">
+                                #{loginBean.usuarioAutenticado != null ? loginBean.usuarioAutenticado.nombreCompleto : 'Administrador'}
+                            </span>
+                            <span class="user-role">
+                                #{loginBean.usuarioAutenticado != null ? loginBean.usuarioAutenticado.rol.nombre : 'Administrador'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Logout Button Form -->
+                    <h:form style="display:inline; margin:0; padding:0;">
+                        <h:commandLink action="#{loginBean.logout}" styleClass="btn-logout" title="Cerrar Sesión">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </h:commandLink>
+                    </h:form>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="content-container">
+                <ui:insert name="content">
+                    <!-- Contenido específico de cada vista -->
+                </ui:insert>
+            </main>
+
+            <!-- Footer -->
+            <footer class="admin-footer">
+                <p>© 2025 Hotel Taipicala. Todos los derechos reservados.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+    //<![CDATA[
+        function toggleSidebar() {
+            var sidebar = document.getElementById('adminSidebar');
+            sidebar.classList.toggle('show');
+        }
+    //]]>
+    </script>
+</h:body>
+</html>

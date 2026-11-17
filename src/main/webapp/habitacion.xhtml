@@ -1,0 +1,56 @@
+<ui:composition template="/templates/layout.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">Nuestras Habitaciones - Taipicala Hotel</ui:define>
+
+    <ui:define name="content">
+        <!-- Page Header Start -->
+        <div class="container-fluid page-header mb-5 p-0" style="background-image: url(#{request.contextPath}/resources/img/carousel-1.png);">
+            <div class="container-fluid page-header-inner py-5">
+                <div class="container text-center pb-5">
+                    <h1 class="display-3 text-white mb-3 animated slideInDown">Habitaciones</h1>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+        <!-- Room Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h6 class="section-title text-center text-primary text-uppercase">Nuestras Habitaciones</h6>
+                    <h1 class="mb-5">Explora Nuestras <span class="text-primary text-uppercase">Habitaciones</span></h1>
+                </div>
+                
+                <b:row>
+                    <ui:repeat value="#{habitacionBean.habitacionesDisponibles}" var="hab">
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="room-item shadow rounded overflow-hidden mb-4">
+                                <div class="position-relative">
+                                    <!-- Use dynamic image from DB or fallback -->
+                                    <img class="img-fluid" src="#{request.contextPath}/resources/img/#{hab.imagenUrl}" alt="Room Image" />
+                                    <small class="position-absolute start-0 top-100 translate-middle-y bg-primary text-white rounded py-1 px-3 ms-4">$#{hab.precio}/Noche</small>
+                                </div>
+                                <div class="p-4 mt-2">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <h5 class="mb-0">#{hab.tipo} (##{hab.numero})</h5>
+                                    </div>
+                                    <p class="text-body mb-3">#{hab.descripcion}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn btn-sm btn-dark rounded py-2 px-4" href="reserva.xhtml?idHabitacion=#{hab.idHabitacion}">Reservar Ahora</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </b:row>
+                
+            </div>
+        </div>
+        <!-- Room End -->
+    </ui:define>
+</ui:composition>

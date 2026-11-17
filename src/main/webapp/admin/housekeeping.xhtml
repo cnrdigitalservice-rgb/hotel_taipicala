@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<ui:composition template="/admin/template.xhtml">
+    <ui:define name="title">Housekeeping - Hotel Taipicala</ui:define>
+    
+    <ui:define name="content">
+        <b:row>
+            <b:column col-md="12">
+                <h2 style="color: #2c3e50; margin-top:0; font-weight: 600;">Estado de Habitaciones (Housekeeping)</h2>
+                <hr/>
+                <p class="text-muted">Personal de limpieza y mantenimiento: Actualice el estado físico de las habitaciones.</p>
+                
+                <h:form id="frmHousekeeping">
+                    <b:messages id="msg" />
+                    
+                    <b:row>
+                        <ui:repeat value="#{adminHousekeepingBean.habitaciones}" var="hab">
+                            <b:column col-md="3" style="margin-bottom: 20px;">
+                                <!-- Determine panel style based on state -->
+                                <b:panel title="Habitación #{hab.numero}" 
+                                         look="#{hab.estado eq 'DISPONIBLE' ? 'success' : 
+                                                 (hab.estado eq 'OCUPADA' ? 'primary' : 
+                                                 (hab.estado eq 'SUCIA' ? 'danger' : 'warning'))}"
+                                         collapsible="false" style="text-align: center;">
+                                    
+                                    <h3>#{hab.tipo}</h3>
+                                    
+                                    <h:outputText value="Estado Actual: " style="font-weight: bold;"/>
+                                    <b:label text="#{hab.estado}" />
+                                    <br/><br/>
+                                    
+                                    <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+                                        <b:commandButton iconAwesome="check" title="Marcar Limpia/Disponible"
+                                                         look="success" size="sm" 
+                                                         action="#{adminHousekeepingBean.marcarLimpia(hab.idHabitacion)}"
+                                                         update="frmHousekeeping"
+                                                         rendered="#{hab.estado eq 'SUCIA' or hab.estado eq 'MANTENIMIENTO'}" />
+                                                         
+                                        <b:commandButton iconAwesome="trash" title="Marcar Sucia (Limpieza Pendiente)"
+                                                         look="danger" size="sm" 
+                                                         action="#{adminHousekeepingBean.marcarSucia(hab.idHabitacion)}"
+                                                         update="frmHousekeeping"
+                                                         rendered="#{hab.estado eq 'OCUPADA' or hab.estado eq 'DISPONIBLE'}" />
+                                                         
+                                        <b:commandButton iconAwesome="wrench" title="Enviar a Mantenimiento"
+                                                         look="warning" size="sm" 
+                                                         action="#{adminHousekeepingBean.marcarMantenimiento(hab.idHabitacion)}"
+                                                         update="frmHousekeeping"
+                                                         rendered="#{hab.estado ne 'MANTENIMIENTO' and hab.estado ne 'OCUPADA'}" />
+                                    </div>
+                                </b:panel>
+                            </b:column>
+                        </ui:repeat>
+                    </b:row>
+                </h:form>
+            </b:column>
+        </b:row>
+    </ui:define>
+</ui:composition>
+</html>

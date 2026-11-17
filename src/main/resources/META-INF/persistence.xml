@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+
+    <persistence-unit name="HotelTaipicalaPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        
+        <!-- Entity Classes -->
+        <class>com.taipicala.model.dto.Habitacion</class>
+        <class>com.taipicala.model.dto.Reserva</class>
+        <class>com.taipicala.model.dto.Cliente</class>
+        <class>com.taipicala.model.dto.Contacto</class>
+        <class>com.taipicala.model.dto.Comprobante</class>
+        <class>com.taipicala.model.dto.DetalleComprobante</class>
+        <class>com.taipicala.model.dto.Pago</class>
+        <class>com.taipicala.model.dto.Usuario</class>
+        <class>com.taipicala.model.dto.Rol</class>
+
+        <properties>
+            <!-- JDBC Connection properties -->
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel_taipicala?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="admin123456"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+
+            <!-- Hibernate properties -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            
+            <!-- Connection pool limit -->
+            <property name="hibernate.connection.pool_size" value="10"/>
+
+            <!-- Update schema if necessary -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>

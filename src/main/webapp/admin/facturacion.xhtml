@@ -1,0 +1,1825 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+<ui:composition template="/admin/template.xhtml">
+    <ui:define name="title">Facturación - Hotel Taipicala</ui:define>
+    
+    <ui:define name="content">
+        <style>
+        /*<![CDATA[*/
+            .facturacion-container {
+                display: flex;
+                flex-direction: column;
+                gap: 22px;
+            }
+
+            /* ================= HERO BANNER ================= */
+            .facturacion-hero-banner {
+                position: relative;
+                width: 100%;
+                height: 110px;
+                border-radius: 16px;
+                overflow: hidden;
+                background-image: url("#{resource['img/facturacion-banner.jpg']}");
+                background-size: cover;
+                background-position: center 30%;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            }
+
+            .facturacion-hero-overlay {
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: linear-gradient(90deg, rgba(15, 23, 42, 0.88) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(15, 23, 42, 0.45) 100%);
+            }
+
+            .facturacion-hero-content {
+                position: relative;
+                z-index: 2;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                padding: 0 28px;
+                gap: 18px;
+            }
+
+            .hero-facturacion-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(8px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 22px;
+                color: #ffffff;
+                border: 1px solid rgba(255, 255, 255, 0.25);
+            }
+
+            .hero-title-group h2 {
+                color: #ffffff;
+                font-size: 22px;
+                font-weight: 800;
+                margin: 0 0 3px 0;
+                letter-spacing: -0.3px;
+            }
+
+            .hero-title-group p {
+                color: rgba(255, 255, 255, 0.85);
+                font-size: 13px;
+                margin: 0;
+            }
+
+            /* ================= 4 KPI CARDS ================= */
+            .kpi-grid-facturacion {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 18px;
+            }
+
+            .fact-kpi-card {
+                border-radius: 16px;
+                padding: 18px 20px;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+                cursor: default;
+            }
+
+            .fact-kpi-card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+            }
+
+            .fact-kpi-blue { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+            .fact-kpi-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+            .fact-kpi-orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+            .fact-kpi-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+
+            .fact-kpi-left {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .fact-kpi-icon-box {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                color: #ffffff;
+            }
+
+            .fact-kpi-info h3 {
+                font-size: 24px;
+                font-weight: 800;
+                margin: 0 0 2px 0;
+                line-height: 1.1;
+                letter-spacing: -0.5px;
+            }
+
+            .fact-kpi-info p {
+                font-size: 12px;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 0.9);
+                margin: 0;
+            }
+
+            .fact-kpi-arrow {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.18);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                color: #ffffff;
+            }
+
+            /* ================= SUB-TABS NAVIGATION ================= */
+            .subtabs-bar {
+                display: flex;
+                align-items: center;
+                gap: 28px;
+                border-bottom: 1.5px solid #e2e8f0;
+                padding-bottom: 2px;
+                margin-top: 4px;
+            }
+
+            .subtab-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 4px 12px 4px;
+                font-size: 13.5px;
+                font-weight: 600;
+                color: #64748b;
+                text-decoration: none;
+                cursor: pointer;
+                border-bottom: 2.5px solid transparent;
+                transition: all 0.2s ease;
+            }
+
+            .subtab-item:hover {
+                color: #0284c7;
+            }
+
+            .subtab-item.active {
+                color: #0284c7;
+                border-bottom-color: #0284c7;
+                font-weight: 700;
+            }
+
+            /* TAB CONTENT PANELS */
+            .tab-panel {
+                display: none;
+            }
+
+            .tab-panel.active {
+                display: block;
+            }
+
+            /* ================= 2-COLUMN MAIN LAYOUT ================= */
+            .facturacion-layout-grid {
+                display: grid;
+                grid-template-columns: 1.4fr 1fr;
+                gap: 22px;
+                align-items: start;
+            }
+
+            .fact-left-col {
+                display: flex;
+                flex-direction: column;
+                gap: 22px;
+            }
+
+            .card-fact-section {
+                background: #ffffff;
+                border-radius: 16px;
+                padding: 22px 24px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+                border: 1px solid #edf2f7;
+            }
+
+            .fact-section-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 18px;
+            }
+
+            .fact-section-title {
+                font-size: 15px;
+                font-weight: 700;
+                color: #0f172a;
+                margin: 0;
+            }
+
+            .btn-add-service {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 7px 14px;
+                background-color: #0284c7;
+                color: #ffffff;
+                font-size: 12.5px;
+                font-weight: 600;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+            .btn-nueva-facturacion {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                padding: 7px 15px;
+                background-color: #0284c7;
+                color: #ffffff;
+                font-size: 12.5px;
+                font-weight: 600;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s;
+                box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+            }
+
+            .btn-nueva-facturacion:hover {
+                background-color: #0369a1;
+                transform: translateY(-1px);
+            }
+
+            .btn-add-service:hover {
+                background-color: #0369a1;
+            }
+
+            /* Form Grid: Datos de Facturación */
+            .form-grid-fact {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap: 14px 16px;
+            }
+
+            .form-group-fact {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .form-group-fact label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #334155;
+            }
+
+            .form-control-fact {
+                height: 38px;
+                border: 1.5px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13px;
+                font-family: inherit;
+                color: #1e293b;
+                background-color: #ffffff;
+                outline: none;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            .form-control-fact:focus {
+                border-color: #0284c7;
+                box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+            }
+
+            .input-with-button {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .btn-inline-icon {
+                height: 38px;
+                width: 38px;
+                border-radius: 8px;
+                border: 1.5px solid #dce4ec;
+                background: #f8fafc;
+                color: #475569;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                flex-shrink: 0;
+            }
+
+            .btn-inline-icon:hover {
+                background: #e2e8f0;
+                color: #0f172a;
+            }
+
+            .btn-inline-primary {
+                height: 38px;
+                width: 38px;
+                border-radius: 8px;
+                border: none;
+                background: #0284c7;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background 0.2s;
+                flex-shrink: 0;
+            }
+
+            .btn-inline-primary:hover {
+                background: #0369a1;
+            }
+
+            /* Table: Detalle de Servicios */
+            .table-fact-services {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: 13px;
+                margin-top: 4px;
+            }
+
+            .table-fact-services th {
+                font-size: 11.5px;
+                font-weight: 700;
+                color: #334155;
+                padding: 10px 12px;
+                background-color: #f8fafc;
+                border-top: 1px solid #edf2f7;
+                border-bottom: 1.5px solid #edf2f7;
+                text-align: left;
+            }
+
+            .table-fact-services td {
+                padding: 11px 12px;
+                color: #334155;
+                border-bottom: 1px solid #f1f5f9;
+                vertical-align: middle;
+            }
+
+            .btn-trash-action {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                background-color: #fee2e2;
+                border: 1px solid #fecaca;
+                color: #ef4444;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-trash-action:hover {
+                background-color: #ef4444;
+                color: #ffffff;
+            }
+
+            /* Bottom Summary & Actions */
+            .fact-services-bottom {
+                display: grid;
+                grid-template-columns: 1.2fr 1fr;
+                gap: 20px;
+                margin-top: 16px;
+                padding-top: 14px;
+                border-top: 1px solid #edf2f7;
+                align-items: start;
+            }
+
+            .fact-obs-group label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #475569;
+                display: block;
+                margin-bottom: 6px;
+            }
+
+            .fact-obs-textarea {
+                width: 100%;
+                border: 1.5px solid #dce4ec;
+                border-radius: 8px;
+                padding: 10px 12px;
+                font-size: 12.5px;
+                font-family: inherit;
+                resize: vertical;
+                outline: none;
+                color: #334155;
+            }
+
+            .fact-obs-textarea:focus {
+                border-color: #0284c7;
+            }
+
+            .fact-totals-box {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                text-align: right;
+            }
+
+            .total-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 13px;
+                color: #475569;
+            }
+
+            .total-row.final-total {
+                font-size: 18px;
+                font-weight: 800;
+                color: #0284c7;
+                border-top: 1.5px solid #edf2f7;
+                padding-top: 8px;
+                margin-top: 4px;
+            }
+
+            .fact-actions-footer {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: 18px;
+                padding-top: 16px;
+                border-top: 1px solid #edf2f7;
+            }
+
+            .btn-fact-limpiar {
+                padding: 8px 18px;
+                border-radius: 8px;
+                border: 1px solid #dce4ec;
+                background-color: #ffffff;
+                color: #475569;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.2s;
+            }
+
+            .btn-fact-limpiar:hover {
+                background-color: #f1f5f9;
+                color: #1e293b;
+            }
+
+            .btn-fact-guardar {
+                padding: 8px 18px;
+                border-radius: 8px;
+                border: 1px solid #bfdbfe;
+                background-color: #eff6ff;
+                color: #0284c7;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                transition: all 0.2s;
+            }
+
+            .btn-fact-guardar:hover {
+                background-color: #dbeafe;
+            }
+
+            .btn-fact-emitir {
+                padding: 8px 22px;
+                border-radius: 8px;
+                border: none;
+                background-color: #0284c7;
+                color: #ffffff;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                transition: background-color 0.2s;
+            }
+
+            .btn-fact-emitir:hover {
+                background-color: #0369a1;
+            }
+
+            /* Table: Últimos Comprobantes Emitidos */
+            .table-ultimos-comprobantes {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: 12.5px;
+            }
+
+            .table-ultimos-comprobantes th {
+                font-size: 11.5px;
+                font-weight: 700;
+                color: #64748b;
+                padding: 10px 12px;
+                border-bottom: 1.5px solid #edf2f7;
+                text-align: left;
+            }
+
+            .table-ultimos-comprobantes td {
+                padding: 11px 12px;
+                color: #334155;
+                border-bottom: 1px solid #f8fafc;
+                vertical-align: middle;
+            }
+
+            .badge-emitido {
+                display: inline-block;
+                padding: 3px 9px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffffff;
+                background-color: #10b981;
+            }
+
+            .badge-anulado {
+                display: inline-block;
+                padding: 3px 9px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffffff;
+                background-color: #ef4444;
+            }
+
+            .badge-completado {
+                display: inline-block;
+                padding: 3px 9px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffffff;
+                background-color: #10b981;
+            }
+
+            .badge-reembolsado {
+                display: inline-block;
+                padding: 3px 9px;
+                border-radius: 6px;
+                font-size: 11px;
+                font-weight: 600;
+                color: #ffffff;
+                background-color: #f59e0b;
+            }
+
+            .action-icons-group {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .btn-icon-tbl {
+                background: none;
+                border: none;
+                color: #64748b;
+                font-size: 13px;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+
+            .btn-icon-tbl:hover {
+                color: #0284c7;
+            }
+
+            .btn-icon-tbl.text-danger:hover {
+                color: #ef4444;
+            }
+
+            /* RIGHT COLUMN: VISTA PREVIA DEL COMPROBANTE */
+            .fact-right-col {
+                position: sticky;
+                top: 90px;
+            }
+
+            .preview-ticket-card {
+                background: #ffffff;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+                border: 1px solid #edf2f7;
+                padding: 24px;
+            }
+
+            .preview-ticket-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 18px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .preview-ticket-header h4 {
+                font-size: 14px;
+                font-weight: 700;
+                color: #0f172a;
+                margin: 0;
+            }
+
+            .btn-imprimir {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 14px;
+                border-radius: 8px;
+                border: 1px solid #0284c7;
+                background-color: #ffffff;
+                color: #0284c7;
+                font-size: 12.5px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-imprimir:hover {
+                background-color: #0284c7;
+                color: #ffffff;
+            }
+
+            /* Ticket Inner Visual Paper */
+            .ticket-paper {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 24px;
+                font-family: inherit;
+            }
+
+            .ticket-top-row {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 16px;
+                margin-bottom: 18px;
+            }
+
+            .ticket-brand {
+                display: flex;
+                flex-direction: column;
+                gap: 3px;
+            }
+
+            .ticket-brand-logo {
+                width: 110px;
+                margin-bottom: 6px;
+            }
+
+            .ticket-hotel-name {
+                font-size: 13px;
+                font-weight: 700;
+                color: #1e293b;
+            }
+
+            .ticket-hotel-address {
+                font-size: 10.5px;
+                color: #64748b;
+                line-height: 1.4;
+            }
+
+            .ticket-box-ruc {
+                border: 1.5px solid #cbd5e1;
+                border-radius: 8px;
+                padding: 10px 14px;
+                text-align: center;
+                min-width: 140px;
+            }
+
+            .ticket-box-title {
+                font-size: 11.5px;
+                font-weight: 800;
+                color: #0f172a;
+                margin-bottom: 4px;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+            }
+
+            .ticket-box-line {
+                font-size: 10px;
+                color: #334155;
+                font-weight: 600;
+                margin: 2px 0;
+            }
+
+            .ticket-client-info {
+                background-color: #f8fafc;
+                border-radius: 8px;
+                padding: 10px 12px;
+                font-size: 11px;
+                line-height: 1.6;
+                color: #334155;
+                margin-bottom: 16px;
+            }
+
+            .ticket-items-table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 11px;
+                margin-bottom: 14px;
+            }
+
+            .ticket-items-table th {
+                font-size: 10px;
+                font-weight: 700;
+                color: #64748b;
+                border-bottom: 1px solid #cbd5e1;
+                padding: 6px 4px;
+                text-align: left;
+            }
+
+            .ticket-items-table td {
+                padding: 8px 4px;
+                border-bottom: 1px solid #f1f5f9;
+                color: #1e293b;
+            }
+
+            .ticket-totals-section {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                align-items: flex-end;
+                font-size: 11.5px;
+                color: #475569;
+                margin-top: 10px;
+            }
+
+            .ticket-total-main {
+                font-size: 17px;
+                font-weight: 800;
+                color: #0284c7;
+                margin-top: 4px;
+            }
+
+            .ticket-footer-center {
+                text-align: center;
+                margin-top: 22px;
+                padding-top: 14px;
+                border-top: 1px dashed #cbd5e1;
+            }
+
+            .ticket-footer-center p {
+                font-size: 10.5px;
+                color: #64748b;
+                margin: 2px 0;
+            }
+
+            .ticket-footer-center .ticket-thanks {
+                font-weight: 700;
+                color: #1e293b;
+                font-size: 11.5px;
+            }
+
+            .ticket-barcode-svg {
+                margin-top: 10px;
+                display: inline-block;
+            }
+
+            /* Filters Bar for Tabs */
+            .tab-filter-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+                margin-bottom: 18px;
+                flex-wrap: wrap;
+            }
+
+            .tab-search-input {
+                flex: 1;
+                min-width: 240px;
+                height: 38px;
+                border: 1.5px solid #dce4ec;
+                border-radius: 8px;
+                padding: 0 12px;
+                font-size: 13px;
+                outline: none;
+            }
+
+            .tab-search-input:focus {
+                border-color: #0284c7;
+            }
+
+            /* Responsive */
+            @media (max-width: 1100px) {
+                .kpi-grid-facturacion { grid-template-columns: repeat(2, 1fr); }
+                .facturacion-layout-grid { grid-template-columns: 1fr; }
+                .fact-right-col { position: static; }
+            }
+
+            @media (max-width: 768px) {
+                .kpi-grid-facturacion { grid-template-columns: 1fr; }
+                .form-grid-fact { grid-template-columns: 1fr; }
+                .fact-services-bottom { grid-template-columns: 1fr; }
+                .subtabs-bar { overflow-x: auto; white-space: nowrap; }
+            }
+        /*]]>*/
+        </style>
+
+        <div class="facturacion-container">
+            <!-- Messages from operations -->
+            <h:messages id="facturacionMessages" globalOnly="true" 
+                        style="list-style:none; padding:12px; border-radius:10px; background:#eff6ff; border:1px solid #bfdbfe; color:#1d4ed8; margin:0;" />
+
+            <!-- ================= HERO BANNER ================= -->
+            <div class="facturacion-hero-banner">
+                <div class="facturacion-hero-overlay"></div>
+                <div class="facturacion-hero-content">
+                    <div class="hero-facturacion-icon">
+                        <i class="far fa-money-bill-alt"></i>
+                    </div>
+                    <div class="hero-title-group">
+                        <h2>Facturación</h2>
+                        <p>Genera comprobantes, controla pagos y brinda una experiencia sin complicaciones.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= 4 KPI CARDS ================= -->
+            <div class="kpi-grid-facturacion">
+                <!-- Card 1: Facturas del Mes -->
+                <div class="fact-kpi-card fact-kpi-blue">
+                    <div class="fact-kpi-left">
+                        <div class="fact-kpi-icon-box"><i class="far fa-file-alt"></i></div>
+                        <div class="fact-kpi-info">
+                            <h3>#{adminFacturacionBean.facturasMes}</h3>
+                            <p>Facturas del Mes</p>
+                        </div>
+                    </div>
+                    <div class="fact-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <!-- Card 2: Boletas del Mes -->
+                <div class="fact-kpi-card fact-kpi-green">
+                    <div class="fact-kpi-left">
+                        <div class="fact-kpi-icon-box"><i class="fas fa-receipt"></i></div>
+                        <div class="fact-kpi-info">
+                            <h3>#{adminFacturacionBean.boletasMes}</h3>
+                            <p>Boletas del Mes</p>
+                        </div>
+                    </div>
+                    <div class="fact-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <!-- Card 3: Ingresos del Mes -->
+                <div class="fact-kpi-card fact-kpi-orange">
+                    <div class="fact-kpi-left">
+                        <div class="fact-kpi-icon-box"><i class="far fa-credit-card"></i></div>
+                        <div class="fact-kpi-info">
+                            <h3>S/ #{adminFacturacionBean.ingresosMes}</h3>
+                            <p>Ingresos del Mes</p>
+                        </div>
+                    </div>
+                    <div class="fact-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+
+                <!-- Card 4: Crecimiento -->
+                <div class="fact-kpi-card fact-kpi-purple">
+                    <div class="fact-kpi-left">
+                        <div class="fact-kpi-icon-box"><i class="fas fa-chart-line"></i></div>
+                        <div class="fact-kpi-info">
+                            <h3>#{adminFacturacionBean.crecimiento}</h3>
+                            <p>Comparado con el mes anterior</p>
+                        </div>
+                    </div>
+                    <div class="fact-kpi-arrow"><i class="fas fa-chevron-right"></i></div>
+                </div>
+            </div>
+
+            <!-- ================= SUB-TABS NAVIGATION ================= -->
+            <div class="subtabs-bar">
+                <a href="javascript:void(0)" class="subtab-item active" id="tabBtnNueva" onclick="switchFactTab('nueva')">
+                    <i class="far fa-file-alt"></i>
+                    <span>Nueva Facturación</span>
+                </a>
+                <a href="javascript:void(0)" class="subtab-item" id="tabBtnComprobantes" onclick="switchFactTab('comprobantes')">
+                    <i class="fas fa-list-ul"></i>
+                    <span>Comprobantes Emitidos</span>
+                </a>
+                <a href="javascript:void(0)" class="subtab-item" id="tabBtnPagos" onclick="switchFactTab('pagos')">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Pagos y Devoluciones</span>
+                </a>
+                <a href="javascript:void(0)" class="subtab-item" id="tabBtnConfig" onclick="switchFactTab('configuracion')">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </a>
+            </div>
+
+            <!-- ================= TAB 1: NUEVA FACTURACIÓN ================= -->
+            <div class="tab-panel active" id="tabPanelNueva">
+                <div class="facturacion-layout-grid">
+                    
+                    <!-- LEFT COLUMN -->
+                    <div class="fact-left-col">
+                        <h:form id="frmFacturacion">
+                            <!-- Card 1: Datos de la Facturación -->
+                            <div class="card-fact-section">
+                                <div class="fact-section-header">
+                                    <h3 class="fact-section-title">Datos de la Facturación</h3>
+                                    <button type="button" class="btn-nueva-facturacion" jsf:action="#{adminFacturacionBean.iniciarNuevaFacturacion}">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Nueva Facturación</span>
+                                        <f:ajax render="@form :pnlTicketPreview :facturacionMessages" />
+                                    </button>
+                                </div>
+
+                                <div class="form-grid-fact">
+                                    <!-- Tipo de Comprobante (span 5) -->
+                                    <div class="form-group-fact" style="grid-column: span 5;">
+                                        <label>Tipo de Comprobante</label>
+                                        <h:selectOneMenu value="#{adminFacturacionBean.tipoComprobante}" styleClass="form-control-fact">
+                                            <f:selectItem itemLabel="Boleta de Venta" itemValue="Boleta de Venta" />
+                                            <f:selectItem itemLabel="Factura" itemValue="Factura" />
+                                            <f:selectItem itemLabel="Nota de Crédito" itemValue="Nota de Crédito" />
+                                            <f:ajax listener="#{adminFacturacionBean.cambiarTipoComprobante}" render="txtSerie txtNumero :pnlTicketPreview" />
+                                        </h:selectOneMenu>
+                                    </div>
+
+                                    <!-- Serie (span 3) -->
+                                    <div class="form-group-fact" style="grid-column: span 3;">
+                                        <label>Serie</label>
+                                        <h:inputText id="txtSerie" value="#{adminFacturacionBean.serie}" styleClass="form-control-fact" />
+                                    </div>
+
+                                    <!-- Número (span 4) with refresh button -->
+                                    <div class="form-group-fact" style="grid-column: span 4;">
+                                        <label>Número</label>
+                                        <div class="input-with-button">
+                                            <h:inputText id="txtNumero" value="#{adminFacturacionBean.numero}" styleClass="form-control-fact" style="flex:1;" />
+                                            <button type="button" class="btn-inline-icon" jsf:action="#{adminFacturacionBean.regenerarNumero}">
+                                                <i class="fas fa-sync-alt"></i>
+                                                <f:ajax render="txtNumero :pnlTicketPreview" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cliente / Huésped (span 8) -->
+                                    <div class="form-group-fact" style="grid-column: span 8;">
+                                        <label>Cliente / Huésped</label>
+                                        <div class="input-with-button">
+                                            <h:inputText value="#{adminFacturacionBean.clienteTexto}" styleClass="form-control-fact" style="flex:1;" />
+                                            <button type="button" class="btn-inline-primary">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tipo de Cliente (span 4) -->
+                                    <div class="form-group-fact" style="grid-column: span 4;">
+                                        <label>Tipo de Cliente</label>
+                                        <h:selectOneMenu value="#{adminFacturacionBean.tipoCliente}" styleClass="form-control-fact">
+                                            <f:selectItem itemLabel="Huésped" itemValue="Huésped" />
+                                            <f:selectItem itemLabel="Empresa" itemValue="Empresa" />
+                                            <f:selectItem itemLabel="Particular" itemValue="Particular" />
+                                        </h:selectOneMenu>
+                                    </div>
+
+                                    <!-- Habitación (opcional) (span 4) -->
+                                    <div class="form-group-fact" style="grid-column: span 4;">
+                                        <label>Habitación (opcional)</label>
+                                        <h:selectOneMenu value="#{adminFacturacionBean.idHabitacion}" styleClass="form-control-fact">
+                                            <f:selectItem itemLabel="101 - Simple" itemValue="1" />
+                                            <f:selectItem itemLabel="102 - Simple" itemValue="2" />
+                                            <f:selectItem itemLabel="201 - Doble" itemValue="3" />
+                                            <f:selectItem itemLabel="203 - Doble" itemValue="4" />
+                                            <f:selectItem itemLabel="302 - Twin" itemValue="5" />
+                                            <f:selectItem itemLabel="305 - Twin" itemValue="6" />
+                                            <f:selectItem itemLabel="401 - Suite" itemValue="7" />
+                                            <f:selectItem itemLabel="501 - Suite" itemValue="8" />
+                                        </h:selectOneMenu>
+                                    </div>
+
+                                    <!-- Reserva (opcional) (span 4) -->
+                                    <div class="form-group-fact" style="grid-column: span 4;">
+                                        <label>Reserva (opcional)</label>
+                                        <h:selectOneMenu value="#{adminFacturacionBean.idReserva}" styleClass="form-control-fact">
+                                            <f:selectItem itemLabel="RES-0001" itemValue="1" />
+                                            <f:selectItem itemLabel="RES-0002" itemValue="2" />
+                                            <f:selectItem itemLabel="RES-0003" itemValue="3" />
+                                            <f:selectItem itemLabel="RES-0004" itemValue="4" />
+                                            <f:selectItem itemLabel="RES-0005" itemValue="5" />
+                                            <f:selectItem itemLabel="RES-0006" itemValue="6" />
+                                            <f:selectItem itemLabel="RES-0007" itemValue="7" />
+                                            <f:selectItem itemLabel="RES-0008" itemValue="8" />
+                                        </h:selectOneMenu>
+                                    </div>
+
+                                    <!-- Fecha de Emisión (span 4) -->
+                                    <div class="form-group-fact" style="grid-column: span 4;">
+                                        <label>Fecha de Emisión</label>
+                                        <h:inputText value="#{adminFacturacionBean.fechaEmisionStr}" 
+                                                     pt:type="date" 
+                                                     pt:onclick="try{this.showPicker()}catch(e){}"
+                                                     styleClass="form-control-fact" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: Detalle de Servicios -->
+                            <div class="card-fact-section" style="margin-top: 22px;">
+                                <div class="fact-section-header">
+                                    <h3 class="fact-section-title">Detalle de Servicios</h3>
+                                    <button type="button" class="btn-add-service" onclick="openModalAgregarServicio()">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Agregar Servicio</span>
+                                    </button>
+                                </div>
+
+                                <table class="table-fact-services">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 35px;">#</th>
+                                            <th>Descripción</th>
+                                            <th style="width: 75px; text-align: center;">Cantidad</th>
+                                            <th style="width: 100px; text-align: right;">Precio (S/)</th>
+                                            <th style="width: 100px; text-align: right;">Subtotal (S/)</th>
+                                            <th style="width: 55px; text-align: center;">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ui:fragment rendered="#{empty adminFacturacionBean.items}">
+                                            <tr>
+                                                <td colspan="6" style="text-align: center; color: #94a3b8; padding: 22px 0; font-style: italic;">
+                                                    <i class="fas fa-receipt" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.5;"></i>
+                                                    No hay servicios en este comprobante. Haga clic en <strong>"+ Agregar Servicio"</strong> para añadir consumos.
+                                                </td>
+                                            </tr>
+                                        </ui:fragment>
+                                        <ui:repeat value="#{adminFacturacionBean.items}" var="item" varStatus="st">
+                                            <tr>
+                                                <td>#{st.index + 1}</td>
+                                                <td><strong>#{item.descripcion}</strong></td>
+                                                <td style="text-align: center;">#{item.cantidad}</td>
+                                                <td style="text-align: right;">#{item.precioUnitario}</td>
+                                                <td style="text-align: right;">#{item.subtotal}</td>
+                                                <td style="text-align: center;">
+                                                    <button type="button" class="btn-trash-action" jsf:action="#{adminFacturacionBean.eliminarItem(st.index)}" title="Eliminar">
+                                                        <i class="far fa-trash-alt"></i>
+                                                        <f:ajax render="@form :pnlTicketPreview" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </tbody>
+                                </table>
+
+                                <!-- Observations & Totals Grid -->
+                                <div class="fact-services-bottom">
+                                    <div class="fact-obs-group">
+                                        <label>Observaciones (opcional)</label>
+                                        <h:inputTextarea value="#{adminFacturacionBean.observaciones}" rows="3" styleClass="fact-obs-textarea" />
+                                    </div>
+
+                                    <div class="fact-totals-box">
+                                        <div class="total-row">
+                                            <span>Subtotal:</span>
+                                            <strong>S/ #{adminFacturacionBean.subtotal}</strong>
+                                        </div>
+                                        <div class="total-row">
+                                            <span>IGV (18%):</span>
+                                            <strong>S/ #{adminFacturacionBean.igv}</strong>
+                                        </div>
+                                        <div class="total-row final-total">
+                                            <span>Total:</span>
+                                            <span>S/ #{adminFacturacionBean.total}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="fact-actions-footer">
+                                    <button type="button" class="btn-nueva-facturacion" jsf:action="#{adminFacturacionBean.iniciarNuevaFacturacion}" style="margin-right:auto;">
+                                        <i class="fas fa-plus"></i>
+                                        <span>Nueva Facturación</span>
+                                        <f:ajax render="@form :pnlTicketPreview :facturacionMessages" />
+                                    </button>
+                                    <button type="button" class="btn-fact-limpiar" jsf:action="#{adminFacturacionBean.limpiarFormulario}">
+                                        <i class="fas fa-sync-alt"></i>
+                                        <span>Limpiar</span>
+                                        <f:ajax render="@form :pnlTicketPreview :facturacionMessages" />
+                                    </button>
+                                    <button type="button" class="btn-fact-guardar" jsf:action="#{adminFacturacionBean.emitirComprobante}">
+                                        <i class="far fa-save"></i>
+                                        <span>Guardar</span>
+                                        <f:ajax render="@form :frmUltimos :pnlTicketPreview :frmTablaComprobantes :frmTablaPagos :facturacionMessages" />
+                                    </button>
+                                    <button type="button" class="btn-fact-emitir" jsf:action="#{adminFacturacionBean.emitirComprobante}">
+                                        <i class="fas fa-paper-plane"></i>
+                                        <span>Emitir Comprobante</span>
+                                        <f:ajax render="@form :frmUltimos :pnlTicketPreview :frmTablaComprobantes :frmTablaPagos :facturacionMessages" />
+                                    </button>
+                                </div>
+                            </div>
+                        </h:form>
+
+                        <!-- Card 3: Últimos Comprobantes Emitidos -->
+                        <div class="card-fact-section">
+                            <div class="fact-section-header">
+                                <h3 class="fact-section-title">| Últimos Comprobantes Emitidos</h3>
+                                <a href="javascript:void(0)" onclick="switchFactTab('comprobantes')" style="font-size: 13px; font-weight: 600; color: #0284c7; text-decoration: none;">Ver todos</a>
+                            </div>
+
+                            <h:form id="frmUltimos">
+                                <table class="table-ultimos-comprobantes">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Fecha</th>
+                                            <th>Cliente / Huésped</th>
+                                            <th>Tipo</th>
+                                            <th>Serie - Número</th>
+                                            <th>Total (S/)</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ui:repeat value="#{adminFacturacionBean.comprobantes}" var="c" varStatus="st">
+                                            <tr>
+                                                <td>#{st.index + 1}</td>
+                                                <td>#{c.fechaEmisionFormateada}</td>
+                                                <td><strong>#{c.cliente != null ? (c.cliente.nombre.concat(' ').concat(c.cliente.apellidos)) : 'Cliente'}</strong></td>
+                                                <td>#{c.tipoCorto}</td>
+                                                <td>#{c.serieNumero}</td>
+                                                <td>#{c.total}</td>
+                                                <td>
+                                                    <span class="#{c.estado eq 'Anulado' ? 'badge-anulado' : 'badge-emitido'}">
+                                                        #{c.estado}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="action-icons-group">
+                                                        <button type="button" class="btn-icon-tbl" jsf:action="#{adminFacturacionBean.seleccionarComprobante(c)}" title="Ver Comprobante">
+                                                            <i class="far fa-eye"></i>
+                                                            <f:ajax render=":pnlTicketPreview" />
+                                                        </button>
+                                                        <button type="button" class="btn-icon-tbl" onclick="window.print()" title="Imprimir">
+                                                            <i class="fas fa-print"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </tbody>
+                                </table>
+                            </h:form>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: VISTA PREVIA DEL COMPROBANTE -->
+                    <div class="fact-right-col">
+                        <h:panelGroup id="pnlTicketPreview" layout="block" styleClass="preview-ticket-card">
+                            <div class="preview-ticket-header">
+                                <h4>Vista Previa del Comprobante</h4>
+                                <button type="button" class="btn-imprimir" onclick="window.print()">
+                                    <i class="fas fa-print"></i>
+                                    <span>Imprimir</span>
+                                </button>
+                            </div>
+
+                            <!-- Ticket Paper Sheet -->
+                            <div class="ticket-paper">
+                                <div class="ticket-top-row">
+                                    <div class="ticket-brand">
+                                        <img src="#{resource['img/taipicala-logo-transparent.png']}" alt="Taipicala" class="ticket-brand-logo" />
+                                        <div class="ticket-hotel-name">#{adminFacturacionBean.configNombreComercial}</div>
+                                        <div class="ticket-hotel-address">
+                                            #{adminFacturacionBean.configDireccion}<br/>
+                                            Tel: #{adminFacturacionBean.configTelefono}
+                                        </div>
+                                    </div>
+
+                                    <div class="ticket-box-ruc" id="txtRucBox">
+                                        <div class="ticket-box-title">
+                                            #{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.tipo.toUpperCase() : adminFacturacionBean.tipoComprobante.toUpperCase()}
+                                        </div>
+                                        <div class="ticket-box-line">RUC: #{adminFacturacionBean.configRuc}</div>
+                                        <div class="ticket-box-line">
+                                            <strong>#{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.serieNumero : (adminFacturacionBean.serie.concat(' - ').concat(adminFacturacionBean.numero))}</strong>
+                                        </div>
+                                        <div class="ticket-box-line">
+                                            Fecha: #{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.fechaEmisionFormateada : adminFacturacionBean.fechaEmisionStr}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Information Box -->
+                                <div class="ticket-client-info">
+                                    <div><strong>Cliente:</strong> #{adminFacturacionBean.comprobanteSeleccionado != null ? (adminFacturacionBean.comprobanteSeleccionado.cliente.nombre.concat(' ').concat(adminFacturacionBean.comprobanteSeleccionado.cliente.apellidos)) : (not empty adminFacturacionBean.clienteTexto ? adminFacturacionBean.clienteTexto : '(Pendiente de ingresar)')}</div>
+                                    <div><strong>Tipo:</strong> #{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.tipoCliente : adminFacturacionBean.tipoCliente}</div>
+                                    <div><strong>Dirección:</strong> Ilave, Puno</div>
+                                </div>
+
+                                <!-- Items Table -->
+                                <table class="ticket-items-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 30px;">Cant.</th>
+                                            <th>Descripción</th>
+                                            <th style="width: 55px; text-align: right;">P. Unit.</th>
+                                            <th style="width: 60px; text-align: right;">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ui:fragment rendered="#{adminFacturacionBean.comprobanteSeleccionado != null}">
+                                            <ui:repeat value="#{adminFacturacionBean.comprobanteSeleccionado.detalles}" var="det">
+                                                <tr>
+                                                    <td>#{det.cantidad}</td>
+                                                    <td>#{det.descripcion}</td>
+                                                    <td style="text-align: right;">#{det.precioUnitario}</td>
+                                                    <td style="text-align: right;">#{det.subtotal}</td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{adminFacturacionBean.comprobanteSeleccionado == null}">
+                                            <ui:fragment rendered="#{empty adminFacturacionBean.items}">
+                                                <tr>
+                                                    <td colspan="4" style="text-align: center; color: #94a3b8; padding: 14px 0; font-style: italic;">
+                                                        Sin servicios agregados.
+                                                    </td>
+                                                </tr>
+                                            </ui:fragment>
+                                            <ui:repeat value="#{adminFacturacionBean.items}" var="it">
+                                                <tr>
+                                                    <td>#{it.cantidad}</td>
+                                                    <td>#{it.descripcion}</td>
+                                                    <td style="text-align: right;">#{it.precioUnitario}</td>
+                                                    <td style="text-align: right;">#{it.subtotal}</td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </ui:fragment>
+                                    </tbody>
+                                </table>
+
+                                <!-- Totals Calculation -->
+                                <div class="ticket-totals-section">
+                                    <div>Subtotal: S/ #{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.subtotal : adminFacturacionBean.subtotal}</div>
+                                    <div>IGV (18%): S/ #{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.igv : adminFacturacionBean.igv}</div>
+                                    <div class="ticket-total-main">
+                                        Total: S/ #{adminFacturacionBean.comprobanteSeleccionado != null ? adminFacturacionBean.comprobanteSeleccionado.total : adminFacturacionBean.total}
+                                    </div>
+                                </div>
+
+                                <!-- Ticket Footer with Barcode -->
+                                <div class="ticket-footer-center">
+                                    <p class="ticket-thanks">#{adminFacturacionBean.configMensajePie}</p>
+                                    <p><strong>#{adminFacturacionBean.configNombreComercial}</strong></p>
+                                    <p><em>Más que un hotel, una experiencia</em></p>
+                                    
+                                    <!-- Realistic SVG Barcode -->
+                                    <div class="ticket-barcode-svg">
+                                        <svg width="220" height="40" viewBox="0 0 220 40">
+                                            <rect x="0" y="0" width="3" height="40" fill="#1e293b"/>
+                                            <rect x="5" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="8" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="15" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="20" y="0" width="5" height="40" fill="#1e293b"/>
+                                            <rect x="28" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="33" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="36" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="43" y="0" width="3" height="40" fill="#1e293b"/>
+                                            <rect x="49" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="53" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="60" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="65" y="0" width="5" height="40" fill="#1e293b"/>
+                                            <rect x="73" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="78" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="82" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="89" y="0" width="3" height="40" fill="#1e293b"/>
+                                            <rect x="95" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="100" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="107" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="112" y="0" width="5" height="40" fill="#1e293b"/>
+                                            <rect x="120" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="124" y="0" width="3" height="40" fill="#1e293b"/>
+                                            <rect x="130" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="135" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="142" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="147" y="0" width="5" height="40" fill="#1e293b"/>
+                                            <rect x="155" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="160" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="164" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="171" y="0" width="3" height="40" fill="#1e293b"/>
+                                            <rect x="177" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="181" y="0" width="4" height="40" fill="#1e293b"/>
+                                            <rect x="188" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="193" y="0" width="5" height="40" fill="#1e293b"/>
+                                            <rect x="201" y="0" width="2" height="40" fill="#1e293b"/>
+                                            <rect x="206" y="0" width="1" height="40" fill="#1e293b"/>
+                                            <rect x="210" y="0" width="3" height="40" fill="#1e293b"/>
+                                            <rect x="216" y="0" width="4" height="40" fill="#1e293b"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= TAB 2: COMPROBANTES EMITIDOS ================= -->
+            <div class="tab-panel" id="tabPanelComprobantes">
+                <div class="card-fact-section">
+                    <div class="fact-section-header">
+                        <h3 class="fact-section-title">Listado de Comprobantes Emitidos</h3>
+                        <span style="font-size:12.5px; color:#64748b;">Total: #{adminFacturacionBean.comprobantes.size()} registros</span>
+                    </div>
+
+                    <!-- Filter Bar for Comprobantes -->
+                    <div class="tab-filter-bar">
+                        <input type="text" class="tab-search-input" id="filtroComprobantesTxt" placeholder="Buscar por cliente, documento o correlativo..." onkeyup="filtrarComprobantesEmitidos()" />
+                        <select class="form-control-fact" id="filtroTipoComp" onchange="filtrarComprobantesEmitidos()" style="width: 180px;">
+                            <option value="">Todos los tipos</option>
+                            <option value="Boleta">Boletas</option>
+                            <option value="Factura">Facturas</option>
+                        </select>
+                        <select class="form-control-fact" id="filtroEstadoComp" onchange="filtrarComprobantesEmitidos()" style="width: 160px;">
+                            <option value="">Todos los estados</option>
+                            <option value="Emitido">Emitido</option>
+                            <option value="Anulado">Anulado</option>
+                        </select>
+                    </div>
+
+                    <h:form id="frmTablaComprobantes">
+                        <table class="table-ultimos-comprobantes" id="tablaComprobantesEmitidos">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Fecha Emisión</th>
+                                    <th>Cliente / Huésped</th>
+                                    <th>Tipo</th>
+                                    <th>Serie - Número</th>
+                                    <th>Subtotal (S/)</th>
+                                    <th>IGV (S/)</th>
+                                    <th>Total (S/)</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ui:repeat value="#{adminFacturacionBean.comprobantes}" var="c" varStatus="st">
+                                    <tr data-tipo="#{c.tipoCorto}" data-estado="#{c.estado}">
+                                        <td>#{st.index + 1}</td>
+                                        <td>#{c.fechaEmisionFormateada}</td>
+                                        <td><strong>#{c.cliente != null ? (c.cliente.nombre.concat(' ').concat(c.cliente.apellidos)) : 'Cliente'}</strong></td>
+                                        <td>#{c.tipoCorto}</td>
+                                        <td><strong>#{c.serieNumero}</strong></td>
+                                        <td>#{c.subtotal}</td>
+                                        <td>#{c.igv}</td>
+                                        <td><strong>S/ #{c.total}</strong></td>
+                                        <td>
+                                            <span class="#{c.estado eq 'Anulado' ? 'badge-anulado' : 'badge-emitido'}">
+                                                #{c.estado}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="action-icons-group">
+                                                <button type="button" class="btn-icon-tbl" jsf:action="#{adminFacturacionBean.seleccionarComprobante(c)}" onclick="switchFactTab('nueva')" title="Ver en Ticket">
+                                                    <i class="far fa-eye"></i>
+                                                    <f:ajax render=":pnlTicketPreview" />
+                                                </button>
+                                                <button type="button" class="btn-icon-tbl" onclick="window.print()" title="Imprimir">
+                                                    <i class="fas fa-print"></i>
+                                                </button>
+                                                <ui:fragment rendered="#{c.estado ne 'Anulado'}">
+                                                    <button type="button" class="btn-icon-tbl text-danger" jsf:action="#{adminFacturacionBean.anularComprobante(c.idComprobante)}" onclick="return confirm('¿Está seguro de anular el comprobante #{c.serieNumero}?');" title="Anular Comprobante">
+                                                        <i class="fas fa-ban"></i>
+                                                        <f:ajax render="@form :frmUltimos :facturacionMessages" />
+                                                    </button>
+                                                </ui:fragment>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ui:repeat>
+                            </tbody>
+                        </table>
+                    </h:form>
+                </div>
+            </div>
+
+            <!-- ================= TAB 3: PAGOS Y DEVOLUCIONES ================= -->
+            <div class="tab-panel" id="tabPanelPagos">
+                <!-- Summary Metrics for Pagos -->
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:20px;">
+                    <div style="background:#ffffff; border-radius:14px; padding:18px; border:1px solid #edf2f7; display:flex; align-items:center; gap:14px;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:#dcfce7; color:#10b981; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:12px; color:#64748b; font-weight:600;">Total Cobrado</div>
+                            <div style="font-size:22px; font-weight:800; color:#0f172a;">S/ #{adminFacturacionBean.totalCobrado}</div>
+                        </div>
+                    </div>
+
+                    <div style="background:#ffffff; border-radius:14px; padding:18px; border:1px solid #edf2f7; display:flex; align-items:center; gap:14px;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:#fef3c7; color:#d97706; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:12px; color:#64748b; font-weight:600;">Total Devoluciones</div>
+                            <div style="font-size:22px; font-weight:800; color:#0f172a;">S/ #{adminFacturacionBean.totalDevuelto}</div>
+                        </div>
+                    </div>
+
+                    <div style="background:#ffffff; border-radius:14px; padding:18px; border:1px solid #edf2f7; display:flex; align-items:center; gap:14px;">
+                        <div style="width:44px; height:44px; border-radius:12px; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:20px;">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div>
+                            <div style="font-size:12px; color:#64748b; font-weight:600;">Transacciones</div>
+                            <div style="font-size:22px; font-weight:800; color:#0f172a;">#{adminFacturacionBean.totalTransacciones}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-fact-section">
+                    <div class="fact-section-header">
+                        <h3 class="fact-section-title">Historial de Pagos y Devoluciones</h3>
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" class="btn-fact-limpiar" onclick="openModalDevolucion()">
+                                <i class="fas fa-undo"></i>
+                                <span>Registrar Devolución</span>
+                            </button>
+                            <button type="button" class="btn-add-service" onclick="openModalPago()">
+                                <i class="fas fa-plus"></i>
+                                <span>Registrar Pago</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <h:form id="frmTablaPagos">
+                        <table class="table-ultimos-comprobantes">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Fecha y Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Tipo Operación</th>
+                                    <th>Método de Pago</th>
+                                    <th>Referencia / Operación</th>
+                                    <th>Monto (S/)</th>
+                                    <th>Estado</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ui:repeat value="#{adminFacturacionBean.pagos}" var="p" varStatus="st">
+                                    <tr>
+                                        <td>#{st.index + 1}</td>
+                                        <td>#{p.fechaPagoFormateada}</td>
+                                        <td><strong>#{p.cliente != null ? (p.cliente.nombre.concat(' ').concat(p.cliente.apellidos)) : 'Cliente'}</strong></td>
+                                        <td>
+                                            <span style="font-weight:600; color:#{p.tipoOperacion eq 'Devolución' ? '#d97706' : '#0284c7'};">
+                                                #{p.tipoOperacion}
+                                            </span>
+                                        </td>
+                                        <td>#{p.metodoPago}</td>
+                                        <td><code>#{p.referencia}</code></td>
+                                        <td><strong>S/ #{p.monto}</strong></td>
+                                        <td>
+                                            <span class="#{p.estado eq 'Reembolsado' ? 'badge-reembolsado' : 'badge-completado'}">
+                                                #{p.estado}
+                                            </span>
+                                        </td>
+                                        <td style="color:#64748b; font-size:12px;">#{p.observaciones}</td>
+                                    </tr>
+                                </ui:repeat>
+                            </tbody>
+                        </table>
+                    </h:form>
+                </div>
+            </div>
+
+            <!-- ================= TAB 4: CONFIGURACIÓN ================= -->
+            <div class="tab-panel" id="tabPanelConfig">
+                <div class="card-fact-section">
+                    <div class="fact-section-header">
+                        <h3 class="fact-section-title">Configuración de Facturación y Emisión</h3>
+                    </div>
+
+                    <h:form id="frmConfiguracion">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <!-- Datos del Negocio -->
+                            <div style="display:flex; flex-direction:column; gap:14px;">
+                                <h4 style="font-size:13.5px; font-weight:700; color:#0284c7; border-bottom:1.5px solid #e2e8f0; padding-bottom:6px; margin:0;">
+                                    <i class="fas fa-hotel"></i> Datos Fiscales del Hotel
+                                </h4>
+                                
+                                <div class="form-group-fact">
+                                    <label>RUC del Hotel *</label>
+                                    <h:inputText value="#{adminFacturacionBean.configRuc}" styleClass="form-control-fact" />
+                                </div>
+                                <div class="form-group-fact">
+                                    <label>Razón Social *</label>
+                                    <h:inputText value="#{adminFacturacionBean.configRazonSocial}" styleClass="form-control-fact" />
+                                </div>
+                                <div class="form-group-fact">
+                                    <label>Nombre Comercial *</label>
+                                    <h:inputText value="#{adminFacturacionBean.configNombreComercial}" styleClass="form-control-fact" />
+                                </div>
+                                <div class="form-group-fact">
+                                    <label>Dirección Fiscal</label>
+                                    <h:inputText value="#{adminFacturacionBean.configDireccion}" styleClass="form-control-fact" />
+                                </div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                    <div class="form-group-fact">
+                                        <label>Teléfono</label>
+                                        <h:inputText value="#{adminFacturacionBean.configTelefono}" styleClass="form-control-fact" />
+                                    </div>
+                                    <div class="form-group-fact">
+                                        <label>Email de Facturación</label>
+                                        <h:inputText value="#{adminFacturacionBean.configEmail}" styleClass="form-control-fact" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Parámetros de Facturación y Series -->
+                            <div style="display:flex; flex-direction:column; gap:14px;">
+                                <h4 style="font-size:13.5px; font-weight:700; color:#0284c7; border-bottom:1.5px solid #e2e8f0; padding-bottom:6px; margin:0;">
+                                    <i class="fas fa-cogs"></i> Series, Impuestos e Impresión
+                                </h4>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                    <div class="form-group-fact">
+                                        <label>Serie Boletas *</label>
+                                        <h:inputText value="#{adminFacturacionBean.configSerieBoleta}" styleClass="form-control-fact" />
+                                    </div>
+                                    <div class="form-group-fact">
+                                        <label>Serie Facturas *</label>
+                                        <h:inputText value="#{adminFacturacionBean.configSerieFactura}" styleClass="form-control-fact" />
+                                    </div>
+                                </div>
+
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                    <div class="form-group-fact">
+                                        <label>Tasa IGV (%) *</label>
+                                        <h:inputText value="#{adminFacturacionBean.configTasaIgv}" styleClass="form-control-fact" />
+                                    </div>
+                                    <div class="form-group-fact">
+                                        <label>Formato de Impresión</label>
+                                        <h:selectOneMenu value="#{adminFacturacionBean.configFormatoImpresion}" styleClass="form-control-fact">
+                                            <f:selectItem itemLabel="Ticket (80mm)" itemValue="Ticket (80mm)" />
+                                            <f:selectItem itemLabel="A4 Hoja Completa" itemValue="A4" />
+                                            <f:selectItem itemLabel="Ticket (58mm)" itemValue="Ticket (58mm)" />
+                                        </h:selectOneMenu>
+                                    </div>
+                                </div>
+
+                                <div class="form-group-fact">
+                                    <label>Mensaje al Pie del Comprobante</label>
+                                    <h:inputTextarea value="#{adminFacturacionBean.configMensajePie}" rows="3" styleClass="fact-obs-textarea" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fact-actions-footer" style="margin-top:24px;">
+                            <button type="submit" jsf:action="#{adminFacturacionBean.guardarConfiguracion}" class="btn-fact-emitir">
+                                <i class="fas fa-save"></i>
+                                <span>Guardar Cambios de Configuración</span>
+                                <f:ajax execute="@form" render="@form :pnlTicketPreview :facturacionMessages" />
+                            </button>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= MODAL AGREGAR SERVICIO ================= -->
+        <div id="modalAddServicio" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+            <div style="background:#ffffff; border-radius:18px; max-width:440px; width:100%; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.25);">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+                    <h3 style="font-size:16px; font-weight:700; color:#0f172a; margin:0;">Agregar Servicio</h3>
+                    <button type="button" onclick="closeModalAgregarServicio()" style="background:none; border:none; font-size:18px; color:#94a3b8; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+                <h:form id="frmModalServicio">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Descripción del Servicio *</label>
+                            <h:inputText value="#{adminFacturacionBean.nuevoItemDescripcion}" required="true" styleClass="form-control-fact" pt:placeholder="Ej. Almuerzo Ejecutivo, Spa, etc." />
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#334155;">Cantidad *</label>
+                                <h:inputText value="#{adminFacturacionBean.nuevoItemCantidad}" required="true" pt:type="number" styleClass="form-control-fact" />
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#334155;">Precio Unitario (S/) *</label>
+                                <h:inputText value="#{adminFacturacionBean.nuevoItemPrecio}" required="true" styleClass="form-control-fact" pt:placeholder="0.00" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                        <button type="button" onclick="closeModalAgregarServicio()" style="padding:8px 16px; border-radius:8px; border:1px solid #dce4ec; background:#fff; font-size:12.5px; font-weight:600; color:#64748b; cursor:pointer;">Cancelar</button>
+                        <button type="submit" jsf:action="#{adminFacturacionBean.agregarItem}" onclick="closeModalAgregarServicio()" style="padding:8px 18px; border-radius:8px; border:none; background:#0284c7; font-size:12.5px; font-weight:600; color:#fff; cursor:pointer;">
+                            Agregar
+                            <f:ajax execute="@form" render=":frmFacturacion :pnlTicketPreview" />
+                        </button>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <!-- ================= MODAL REGISTRAR PAGO ================= -->
+        <div id="modalRegistrarPago" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+            <div style="background:#ffffff; border-radius:18px; max-width:440px; width:100%; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.25);">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+                    <h3 style="font-size:16px; font-weight:700; color:#0f172a; margin:0;">Registrar Nuevo Pago</h3>
+                    <button type="button" onclick="closeModalPago()" style="background:none; border:none; font-size:18px; color:#94a3b8; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+                <h:form id="frmModalPago">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Cliente *</label>
+                            <h:selectOneMenu value="#{adminFacturacionBean.nuevoPagoClienteId}" styleClass="form-control-fact">
+                                <f:selectItem itemLabel="Juan Pérez Quispe" itemValue="1" />
+                                <f:selectItem itemLabel="María Condori" itemValue="2" />
+                                <f:selectItem itemLabel="Carlos Mamani" itemValue="3" />
+                                <f:selectItem itemLabel="Ana Torres" itemValue="4" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#334155;">Monto (S/) *</label>
+                                <h:inputText value="#{adminFacturacionBean.nuevoPagoMonto}" required="true" styleClass="form-control-fact" />
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#334155;">Método *</label>
+                                <h:selectOneMenu value="#{adminFacturacionBean.nuevoPagoMetodo}" styleClass="form-control-fact">
+                                    <f:selectItem itemLabel="Tarjeta VISA" itemValue="Tarjeta VISA" />
+                                    <f:selectItem itemLabel="Tarjeta MasterCard" itemValue="Tarjeta MasterCard" />
+                                    <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                                    <f:selectItem itemLabel="Yape / Plin" itemValue="Yape / Plin" />
+                                    <f:selectItem itemLabel="Transferencia BCP" itemValue="Transferencia BCP" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-group-fact">
+                            <label>Nro. Operación / Referencia</label>
+                            <h:inputText value="#{adminFacturacionBean.nuevoPagoReferencia}" styleClass="form-control-fact" />
+                        </div>
+                        <div class="form-group-fact">
+                            <label>Observaciones</label>
+                            <h:inputText value="#{adminFacturacionBean.nuevoPagoObservaciones}" styleClass="form-control-fact" />
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                        <button type="button" onclick="closeModalPago()" style="padding:8px 16px; border-radius:8px; border:1px solid #dce4ec; background:#fff; font-size:12.5px; font-weight:600; color:#64748b; cursor:pointer;">Cancelar</button>
+                        <button type="submit" jsf:action="#{adminFacturacionBean.registrarNuevoPago}" onclick="closeModalPago()" style="padding:8px 18px; border-radius:8px; border:none; background:#0284c7; font-size:12.5px; font-weight:600; color:#fff; cursor:pointer;">
+                            Guardar Pago
+                            <f:ajax execute="@form" render=":frmTablaPagos :facturacionMessages" />
+                        </button>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <!-- ================= MODAL REGISTRAR DEVOLUCIÓN ================= -->
+        <div id="modalRegistrarDevolucion" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; align-items:center; justify-content:center; padding:20px;">
+            <div style="background:#ffffff; border-radius:18px; max-width:440px; width:100%; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.25);">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+                    <h3 style="font-size:16px; font-weight:700; color:#0f172a; margin:0;">Registrar Devolución</h3>
+                    <button type="button" onclick="closeModalDevolucion()" style="background:none; border:none; font-size:18px; color:#94a3b8; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+                <h:form id="frmModalDevolucion">
+                    <div style="display:flex; flex-direction:column; gap:12px;">
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:12px; font-weight:600; color:#334155;">Cliente *</label>
+                            <h:selectOneMenu value="#{adminFacturacionBean.nuevaDevolucionClienteId}" styleClass="form-control-fact">
+                                <f:selectItem itemLabel="Juan Pérez Quispe" itemValue="1" />
+                                <f:selectItem itemLabel="María Condori" itemValue="2" />
+                                <f:selectItem itemLabel="Carlos Mamani" itemValue="3" />
+                                <f:selectItem itemLabel="Ana Torres" itemValue="4" />
+                            </h:selectOneMenu>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#334155;">Monto a Devolver (S/) *</label>
+                                <h:inputText value="#{adminFacturacionBean.nuevaDevolucionMonto}" required="true" styleClass="form-control-fact" />
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#334155;">Método *</label>
+                                <h:selectOneMenu value="#{adminFacturacionBean.nuevaDevolucionMetodo}" styleClass="form-control-fact">
+                                    <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                                    <f:selectItem itemLabel="Transferencia Bancaria" itemValue="Transferencia" />
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="form-group-fact">
+                            <label>Motivo de la Devolución *</label>
+                            <h:inputText value="#{adminFacturacionBean.nuevaDevolucionMotivo}" required="true" styleClass="form-control-fact" />
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;">
+                        <button type="button" onclick="closeModalDevolucion()" style="padding:8px 16px; border-radius:8px; border:1px solid #dce4ec; background:#fff; font-size:12.5px; font-weight:600; color:#64748b; cursor:pointer;">Cancelar</button>
+                        <button type="submit" jsf:action="#{adminFacturacionBean.registrarDevolucion}" onclick="closeModalDevolucion()" style="padding:8px 18px; border-radius:8px; border:none; background:#d97706; font-size:12.5px; font-weight:600; color:#fff; cursor:pointer;">
+                            Procesar Devolución
+                            <f:ajax execute="@form" render=":frmTablaPagos :facturacionMessages" />
+                        </button>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <script>
+        //<![CDATA[
+            function switchFactTab(tabName) {
+                // Update tabs
+                var tabs = ['nueva', 'comprobantes', 'pagos', 'configuracion'];
+                var tabBtns = {
+                    'nueva': document.getElementById('tabBtnNueva'),
+                    'comprobantes': document.getElementById('tabBtnComprobantes'),
+                    'pagos': document.getElementById('tabBtnPagos'),
+                    'configuracion': document.getElementById('tabBtnConfig')
+                };
+                var tabPanels = {
+                    'nueva': document.getElementById('tabPanelNueva'),
+                    'comprobantes': document.getElementById('tabPanelComprobantes'),
+                    'pagos': document.getElementById('tabPanelPagos'),
+                    'configuracion': document.getElementById('tabPanelConfig')
+                };
+
+                for (var i = 0; i < tabs.length; i++) {
+                    var t = tabs[i];
+                    if (t === tabName) {
+                        if (tabBtns[t]) tabBtns[t].classList.add('active');
+                        if (tabPanels[t]) tabPanels[t].classList.add('active');
+                    } else {
+                        if (tabBtns[t]) tabBtns[t].classList.remove('active');
+                        if (tabPanels[t]) tabPanels[t].classList.remove('active');
+                    }
+                }
+            }
+
+            function filtrarComprobantesEmitidos() {
+                var search = document.getElementById('filtroComprobantesTxt').value.toLowerCase();
+                var tipo = document.getElementById('filtroTipoComp').value;
+                var estado = document.getElementById('filtroEstadoComp').value;
+                var tbody = document.getElementById('tablaComprobantesEmitidos').getElementsByTagName('tbody')[0];
+                var rows = tbody.getElementsByTagName('tr');
+
+                for (var i = 0; i < rows.length; i++) {
+                    var row = rows[i];
+                    var rTipo = row.getAttribute('data-tipo');
+                    var rEstado = row.getAttribute('data-estado');
+                    var text = row.textContent.toLowerCase();
+
+                    var matchSearch = (search === '' || text.indexOf(search) !== -1);
+                    var matchTipo = (tipo === '' || rTipo === tipo);
+                    var matchEstado = (estado === '' || rEstado === estado);
+
+                    if (matchSearch && matchTipo && matchEstado) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+
+            function openModalAgregarServicio() {
+                document.getElementById('modalAddServicio').style.display = 'flex';
+            }
+            function closeModalAgregarServicio() {
+                document.getElementById('modalAddServicio').style.display = 'none';
+            }
+
+            function openModalPago() {
+                document.getElementById('modalRegistrarPago').style.display = 'flex';
+            }
+            function closeModalPago() {
+                document.getElementById('modalRegistrarPago').style.display = 'none';
+            }
+
+            function openModalDevolucion() {
+                document.getElementById('modalRegistrarDevolucion').style.display = 'flex';
+            }
+            function closeModalDevolucion() {
+                document.getElementById('modalRegistrarDevolucion').style.display = 'none';
+            }
+        //]]>
+        </script>
+    </ui:define>
+</ui:composition>
+</html>
